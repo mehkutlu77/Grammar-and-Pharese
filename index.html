@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Master Suite v18.6 - Professional Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #F0F4F8; --white: #FFFFFF; --primary: #1A73E8;
+            --A1: #FF5E57; --A2: #FF8D52; --B1: #FFBC52; --B2: #05C46B; --C1: #0FBCE9; --C2: #575fcf;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08); --radius: 30px;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: #1E272E; height: 100vh; overflow: hidden; }
+
+        .app-shell { width: 100%; height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+        .screen { display: none; height: 100%; flex-direction: column; overflow-y: auto; animation: fadeIn 0.3s ease; }
+        .active-screen { display: flex; }
+
+        /* --- TOP BAR --- */
+        .top-bar { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 45px; height: 45px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); color: var(--primary); font-size: 20px; }
+        .user-text b { display: block; font-size: 16px; font-weight: 800; }
+        .user-text span { font-size: 11px; color: #808E9B; }
+
+        /* --- STREAK (HAFTALIK SERİ) --- */
+        .streak-card { margin: 0 20px 20px; background: var(--white); border-radius: 25px; padding: 15px; box-shadow: var(--shadow); }
+        .streak-title { font-size: 12px; font-weight: 800; color: #808E9B; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .streak-days { display: flex; justify-content: space-between; text-align: center; }
+        .day-box { flex: 1; }
+        .day-circle { width: 30px; height: 30px; border-radius: 50%; background: #F1F2F6; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #BDC1C6; transition: 0.3s; }
+        .day-circle.active { background: linear-gradient(135deg, #FF9F43, #FF6B6B); color: white; box-shadow: 0 5px 10px rgba(255,107,107,0.3); }
+        .day-name { font-size: 9px; font-weight: 600; color: #808E9B; }
+
+        /* --- MOD SEÇİCİ --- */
+        .mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
+        .mode-card { padding: 25px 15px; border-radius: var(--radius); border: none; color: white; cursor: pointer; text-align: center; font-weight: 700; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .mode-card i { display: block; font-size: 26px; margin-bottom: 8px; }
+        .mode-grammar { background: linear-gradient(135deg, #6200EE, #3700B3); }
+        .mode-phrase { background: linear-gradient(135deg, #FF9900, #E68A00); }
+        .mode-card.inactive { opacity: 0.5; filter: grayscale(0.8); transform: scale(0.95); }
+
+        /* --- İSTATİSTİK ANALİZ ALANI --- */
+        .stats-area { padding: 0 20px 100px; }
+        .level-stat-row { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow); }
+        .level-badge { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; font-size: 16px; }
+        .stat-info { flex: 1; }
+        .stat-top { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; font-weight: 700; }
+        .bar-bg { height: 8px; background: #F1F2F6; border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; transition: 0.5s; border-radius: 10px; }
+
+        /* --- DİĞER EKRANLAR VE KARTLAR (Önceki v18.5 kuralları korunmuştur) --- */
+        .header-alt { padding: 25px 20px; background: var(--white); border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 20px; }
+        .set-item { background: white; margin-bottom: 12px; padding: 20px; border-radius: 22px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); cursor: pointer; border-left: 6px solid var(--primary); }
+
+        /* KARTLAR */
+        .card-zone { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; perspective: 1000px; }
+        .card-3d { width: 100%; height: 450px; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .card-3d.flipped { transform: rotateY(180deg); }
+        .face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 35px; text-align: center; background: white; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .face-back { transform: rotateY(180deg); background: #F8F9FA; }
+        .tense-tag { font-size: 12px; color: var(--primary); font-weight: 700; background: #E8F0FE; padding: 6px 16px; border-radius: 12px; margin-top: 15px; }
+
+        .btn-action { width: 80px; height: 80px; border-radius: 50%; border: none; color: white; font-size: 32px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    
+    <div id="scrDash" class="screen active-screen">
+        <div class="top-bar">
+            <div class="user-info">
+                <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                <div class="user-text">
+                    <b id="userName">MASTER LEARNER</b>
+                    <span>İlerlemeye Devam Et!</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-sliders" style="font-size: 22px; color: #5F6368;" onclick="nav('scrSetts')"></i>
+        </div>
+
+        <div class="streak-card">
+            <div class="streak-title">HAFTALIK SERİ <span><i class="fa-solid fa-fire" style="color:#FF9F43"></i> 4 GÜN</span></div>
+            <div class="streak-days">
+                <div class="day-box"><div class="day-circle active">Pz</div><div class="day-name">Pzt</div></div>
+                <div class="day-box"><div class="day-circle active">Sa</div><div class="day-name">Sal</div></div>
+                <div class="day-box"><div class="day-circle active">Çr</div><div class="day-name">Çar</div></div>
+                <div class="day-box"><div class="day-circle active">Pr</div><div class="day-name">Per</div></div>
+                <div class="day-box"><div class="day-circle">Cu</div><div class="day-name">Cum</div></div>
+                <div class="day-box"><div class="day-circle">Ct</div><div class="day-name">Cmt</div></div>
+                <div class="day-box"><div class="day-circle">Pz</div><div class="day-name">Paz</div></div>
+            </div>
+        </div>
+
+        <div class="mode-row">
+            <div id="btnG" class="mode-card mode-grammar" onclick="setMode('grammar')">
+                <i class="fa-solid fa-brain"></i>GRAMMAR
+            </div>
+            <div id="btnP" class="mode-card mode-phrase" onclick="setMode('phrase')">
+                <i class="fa-solid fa-comments"></i>PHRASE
+            </div>
+        </div>
+
+        <div class="section-title" id="statTitle">GRAMMAR ANALİZİ</div>
+        <div class="stats-area" id="statsArea">
+            </div>
+    </div>
+
+    <div id="scrLevels" class="screen">
+        <div class="header-alt">
+            <i class="fa-solid fa-arrow-left" onclick="nav('scrDash')"></i>
+            <h1 id="lvlScrTitle">SEVİYELER</h1>
+            <div></div>
+        </div>
+        <div style="padding: 20px;" class="level-grid-container">
+            <div id="lvlGridMaster" class="level-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;"></div>
+        </div>
+    </div>
+
+    <div id="scrList" class="screen">
+        <div class="header-alt">
+            <i class="fa-solid fa-arrow-left" onclick="nav('scrLevels')"></i>
+            <h1 id="listTitle">SETLER</h1>
+            <div></div>
+        </div>
+        <div class="scroll-area" id="listCont"></div>
+    </div>
+
+    <div id="scrGame" class="screen">
+        <div class="header-alt" style="background:transparent; box-shadow:none;">
+            <i class="fa-solid fa-xmark" onclick="nav('scrList')"></i>
+            <b id="gameTitle" style="font-size:14px; color:var(--primary)">SET 1</b>
+            <i class="fa-solid fa-volume-high" onclick="speak()"></i>
+        </div>
+        <div class="card-zone">
+            <div class="card-3d" id="mainCard" onclick="this.classList.toggle('flipped')">
+                <div class="face">
+                    <div id="txtEng" style="font-size: 24px; font-weight: 800;">...</div>
+                </div>
+                <div class="face face-back" id="txtTrCont"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn-action" style="background: #EA4335;" onclick="handleAns(false)"><i class="fa-solid fa-times"></i></button>
+            <button class="btn-action" style="background: #34A853;" onclick="handleAns(true)"><i class="fa-solid fa-check"></i></button>
+        </div>
+    </div>
+
+    <div id="scrSetts" class="screen">
+        <div class="header-alt">
+            <i class="fa-solid fa-arrow-left" onclick="nav('scrDash')"></i>
+            <h1>AYARLAR</h1>
+            <div></div>
+        </div>
+        <div style="padding: 20px;">
+            <div class="set-item" style="border-left:none">
+                <b>Yedek Yükle (JSON)</b>
+                <input type="file" hidden id="fileInp" onchange="importData(event)">
+                <i class="fa-solid fa-upload" onclick="document.getElementById('fileInp').click()"></i>
+            </div>
+            <div class="set-item" style="border-left:none" onclick="exportFull()">
+                <b>Tümünü Yedekle</b>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let DATA = {
+        mode: 'grammar',
+        lvl: 'A1',
+        progress: { grammar: {}, phrase: {} }, // Hangi setler bitti
+        db: { grammar: null, phrase: null }
+    };
+
+    function nav(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(id).classList.add('active-screen');
+        if(id === 'scrDash') renderStats();
+    }
+
+    function setMode(m) {
+        DATA.mode = m;
+        renderStats();
+        openLevels();
+    }
+
+    function openLevels() {
+        const grid = document.getElementById('lvlGridMaster');
+        grid.innerHTML = '';
+        ['A1','A2','B1','B2','C1','C2'].forEach(l => {
+            grid.innerHTML += `
+                <div class="level-btn" onclick="selectLevel('${l}')" style="background:white; padding:20px; border-radius:20px; text-align:center; box-shadow:var(--shadow);">
+                    <b style="color:var(--${l}); font-size:20px;">${l}</b>
+                </div>`;
+        });
+        document.getElementById('lvlScrTitle').innerText = DATA.mode.toUpperCase() + " SEVİYELERİ";
+        nav('scrLevels');
+    }
+
+    function selectLevel(l) {
+        DATA.lvl = l;
+        openList();
+    }
+
+    function renderStats() {
+        document.getElementById('btnG').className = `mode-card mode-grammar ${DATA.mode==='grammar'?'':'inactive'}`;
+        document.getElementById('btnP').className = `mode-card mode-phrase ${DATA.mode==='phrase'?'':'inactive'}`;
+        document.getElementById('statTitle').innerText = DATA.mode.toUpperCase() + " ANALİZİ";
+        
+        const area = document.getElementById('statsArea');
+        area.innerHTML = '';
+        
+        ['A1','A2','B1','B2','C1','C2'].forEach(l => {
+            const db = DATA.db[DATA.mode];
+            const totalSets = (db && db.db[l]) ? db.db[l].length : 0;
+            const completed = DATA.progress[DATA.mode][l] || 0;
+            const pct = totalSets ? Math.round((completed / totalSets) * 100) : 0;
+            
+            area.innerHTML += `
+                <div class="level-stat-row">
+                    <div class="level-badge" style="background:var(--${l})">${l}</div>
+                    <div class="stat-info">
+                        <div class="stat-top"><span>${totalSets} Set</span> <span>%${pct}</span></div>
+                        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%; background:var(--${l})"></div></div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function openList() {
+        const db = DATA.db[DATA.mode];
+        if(!db || !db.db[DATA.lvl]) return alert("Veri bulunamadı!");
+        const cont = document.getElementById('listCont');
+        cont.innerHTML = '';
+        db.db[DATA.lvl].forEach((s, i) => {
+            cont.innerHTML += `<div class="set-item" onclick="startSet(${i})"><b>${s.title}</b><i class="fa-solid fa-play"></i></div>`;
+        });
+        nav('scrList');
+    }
+
+    let curS = 0, curC = 0;
+    function startSet(i) { curS = i; curC = 0; renderCard(); nav('scrGame'); }
+
+    function renderCard() {
+        const item = DATA.db[DATA.mode].db[DATA.lvl][curS].items[curC];
+        document.getElementById('txtEng').innerText = item.eng;
+        document.getElementById('mainCard').classList.remove('flipped');
+        
+        let tr = item.tr, tense = "";
+        if(tr.includes("(") && tr.includes(")")) {
+            tense = tr.substring(tr.indexOf("(")+1, tr.indexOf(")"));
+            tr = tr.substring(0, tr.indexOf("(")).trim();
+        }
+        document.getElementById('txtTrCont').innerHTML = `<div style="font-size:20px; font-weight:700;">${tr}</div>${tense?`<div class="tense-tag">${tense}</div>`:''}`;
+    }
+
+    function handleAns(c) {
+        curC++;
+        if(curC >= DATA.db[DATA.mode].db[DATA.lvl][curS].items.length) {
+            // Set bitti, ilerlemeyi kaydet
+            if(!DATA.progress[DATA.mode][DATA.lvl]) DATA.progress[DATA.mode][DATA.lvl] = 0;
+            DATA.progress[DATA.mode][DATA.lvl]++;
+            save(); alert("Harika! Set tamamlandı."); nav('scrList'); return;
+        }
+        renderCard();
+    }
+
+    function importData(e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const raw = JSON.parse(ev.target.result);
+            if(raw.db && raw.progress) { DATA = raw; } // Tam yedek
+            else if(raw.db) {
+                const first = Object.keys(raw.db)[0];
+                const mode = raw.db[first][0].items.length === 12 ? 'grammar' : 'phrase';
+                DATA.db[mode] = raw;
+            }
+            save(); renderStats();
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    function exportFull() {
+        const blob = new Blob([JSON.stringify(DATA)], {type:"application/json"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "Master_Suite_Backup.json";
+        a.click();
+    }
+
+    function speak() {
+        const u = new SpeechSynthesisUtterance(document.getElementById('txtEng').innerText);
+        u.lang = 'en-US'; speechSynthesis.speak(u);
+    }
+
+    function save() { localStorage.setItem('MS_FINAL_HUB', JSON.stringify(DATA)); }
+    function load() {
+        const local = localStorage.getItem('MS_FINAL_HUB');
+        if(local) DATA = JSON.parse(local);
+        renderStats();
+    }
+
+    load();
+</script>
+</body>
+</html>
