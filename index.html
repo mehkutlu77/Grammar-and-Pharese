@@ -501,6 +501,43 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
 .lvl-exam-sub{ font-size:.82rem; color:var(--muted); text-align:center; line-height:1.5; margin-bottom:20px; }
 .lvl-exam-enter-btn{ width:100%; height:54px; border-radius:16px; border:none; background:linear-gradient(135deg,#16a34a,#4ade80); color:white; font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:700; cursor:pointer; transition:.2s; margin-bottom:10px; }
 .lvl-exam-later-btn{ width:100%; height:44px; border-radius:14px; border:1.5px solid var(--border); background:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; }
+
+/* ── DARK MODE SMOOTH TRANSITION ── */
+.theme-transitioning,.theme-transitioning *{ transition:background-color .35s ease,color .35s ease,border-color .35s ease !important; }
+
+/* ── SRS REVIEW CARD (home screen) ── */
+.srs-card{ background:linear-gradient(135deg,#fef3c7,#fde68a); border-radius:16px; margin:0 20px 12px; padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; border:1.5px solid #fbbf24; }
+.srs-card-icon{ font-size:1.6rem; }
+.srs-card-info{ flex:1; }
+.srs-card-title{ font-size:.88rem; font-weight:700; color:#78350f; }
+.srs-card-sub{ font-size:.72rem; color:#92400e; margin-top:2px; }
+.srs-card-btn{ background:#d97706; color:#fff; border:none; border-radius:10px; padding:6px 14px; font-size:.78rem; font-weight:600; cursor:pointer; flex-shrink:0; }
+
+/* ── WEEKLY SUMMARY MODAL ── */
+#weeklyModal{ z-index:9100; }
+.weekly-stat-box{ background:var(--lvl-soft); border-radius:12px; padding:14px; text-align:center; }
+.weekly-stat-val{ font-size:1.4rem; font-weight:700; color:var(--lvl-dark); }
+.weekly-stat-lbl{ font-size:.7rem; color:var(--muted); margin-top:2px; }
+
+/* ── PROFILE PHOTO ── */
+.profile-avatar{ cursor:pointer; position:relative; overflow:hidden; }
+.prof-photo-img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.prof-photo-overlay{ position:absolute; inset:0; background:rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; opacity:0; transition:.2s; border-radius:50%; font-size:.7rem; color:#fff; font-weight:700; flex-direction:column; gap:2px; }
+.profile-avatar:active .prof-photo-overlay{ opacity:1; }
+
+/* ── ONBOARDING LEVEL TEST ── */
+.ob-level-progress{ height:6px; background:var(--border); border-radius:3px; margin:0 0 14px; overflow:hidden; }
+.ob-level-prog-bar{ height:100%; background:var(--lvl-main); border-radius:3px; transition:width .3s; }
+.ob-level-qnum{ font-size:.75rem; color:var(--muted); font-weight:600; margin-bottom:10px; text-align:center; }
+.ob-level-question{ font-size:.95rem; font-weight:600; color:var(--text); line-height:1.55; margin-bottom:18px; text-align:center; padding:0 4px; }
+.ob-level-options{ display:flex; flex-direction:column; gap:9px; }
+.ob-level-opt{ padding:12px 16px; border-radius:14px; border:1.5px solid var(--border); background:var(--surface); color:var(--text); font-size:.86rem; font-weight:500; cursor:pointer; text-align:left; transition:.15s; font-family:'DM Sans',sans-serif; width:100%; }
+.ob-level-opt:active{ background:var(--lvl-soft); border-color:var(--lvl-main); }
+.ob-level-opt.correct{ background:#f0fdf4; border-color:#4ade80; color:#15803d; pointer-events:none; }
+.ob-level-opt.wrong{ background:#fef2f2; border-color:#f87171; color:#dc2626; pointer-events:none; }
+
+/* ── SWIPE HINT ── */
+.swipe-hint{ position:absolute; bottom:16px; left:0; right:0; text-align:center; font-size:.68rem; color:var(--muted); opacity:.55; pointer-events:none; letter-spacing:.3px; }
 </style>
 </head>
 <body data-level="A1">
@@ -614,6 +651,21 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
   </div>
 </div>
 
+<!-- ══ WEEKLY SUMMARY MODAL ══ -->
+<div class="modal-overlay" id="weeklyModal" style="display:none;align-items:flex-end" onclick="if(event.target===this)closeWeeklySummary()">
+  <div class="login-sheet" style="max-height:85vh;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))">
+    <div class="sheet-handle"></div>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:2.4rem;margin-bottom:8px" id="weeklyEmoji">📊</div>
+      <div style="font-size:1.15rem;font-weight:700;color:var(--text)">Haftalık Özet</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Geçen haftaki performansın</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px" id="weeklyStatsGrid"></div>
+    <div style="background:var(--lvl-soft);border-radius:14px;padding:14px 16px;margin-bottom:20px;text-align:center;line-height:1.5" id="weeklyMsg"></div>
+    <button class="sheet-btn" onclick="closeWeeklySummary()">Tamam, devam et! 💪</button>
+  </div>
+</div>
+
 <!-- ══ LEVEL EXAM PROMPT ══ -->
 <div class="lvl-exam-prompt" id="lvlExamPrompt">
   <div class="lvl-exam-sheet">
@@ -652,10 +704,11 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
 <!-- ══ ONBOARDING ══ -->
 <div class="onboard-overlay hidden" id="scrOnboard">
 
-  <!-- Progress dots (2 steps) -->
+  <!-- Progress dots (3 steps) -->
   <div class="ob-dots">
     <div class="ob-dot active" id="obDot0"></div>
     <div class="ob-dot" id="obDot1"></div>
+    <div class="ob-dot" id="obDot2"></div>
   </div>
 
   <!-- Step 1 — Avatar/Icon -->
@@ -678,12 +731,45 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
     <div class="ob-title">Çalışma Hedefin</div>
     <div class="ob-sub">Odaklanmak istediğin alanı seç 🎯</div>
     <div class="ob-choice-grid" id="obChoiceGrid"></div>
-    <button class="ob-btn ob-finish" onclick="obFinish()">
-      Başla! 🚀
+    <button class="ob-btn" onclick="obNext(1)">
+      Devam Et <i class="fa-solid fa-arrow-right"></i>
     </button>
     <button class="ob-back-btn" onclick="obBack(1)">
       <i class="fa-solid fa-arrow-left"></i> Geri
     </button>
+  </div>
+
+  <!-- Step 3 — Level Test -->
+  <div class="ob-step" id="obStep2">
+    <!-- Intro -->
+    <div id="obLevelIntro">
+      <div style="text-align:center;padding:8px 0 20px">
+        <div style="font-size:3rem;margin-bottom:12px">🎯</div>
+        <div class="ob-title" style="margin-bottom:8px">Seviyeni Belirle</div>
+        <div class="ob-sub">20 soruluk kısa testle sana en uygun seviyeyi bulalım.</div>
+      </div>
+      <button class="ob-btn" onclick="obStartLevelTest()">Teste Başla <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="ob-btn" style="background:transparent;color:var(--lvl-dark);border:1.5px solid var(--lvl-main);margin-top:10px" onclick="obSkipLevelTest()">
+        Atla — A1'den Başla
+      </button>
+      <button class="ob-back-btn" onclick="obBack(2)"><i class="fa-solid fa-arrow-left"></i> Geri</button>
+    </div>
+    <!-- Question -->
+    <div id="obLevelTestQ" style="display:none">
+      <div class="ob-level-progress"><div class="ob-level-prog-bar" id="obLevelProgBar" style="width:5%"></div></div>
+      <div class="ob-level-qnum" id="obLevelQNum">1 / 20</div>
+      <div class="ob-level-question" id="obLevelQuestion">—</div>
+      <div class="ob-level-options" id="obLevelOptions"></div>
+    </div>
+    <!-- Result -->
+    <div id="obLevelTestResult" style="display:none">
+      <div style="text-align:center;padding:8px 0 20px">
+        <div style="font-size:3rem;margin-bottom:12px" id="obLevelResultEmoji">🌱</div>
+        <div class="ob-title" id="obLevelResultTitle" style="margin-bottom:8px">Seviyeniz: A1</div>
+        <div class="ob-sub" id="obLevelResultSub">Bu seviyeden çalışmaya başlıyorsunuz</div>
+      </div>
+      <button class="ob-btn ob-finish" onclick="obFinish()">Başla! 🚀</button>
+    </div>
   </div>
 
 </div>
@@ -773,7 +859,7 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
       <div class="game-chip" id="gameChip">1 / 12</div>
       <button class="icon-btn" onclick="speak()"><i class="fa-solid fa-volume-high"></i></button>
     </div>
-    <div class="card-zone">
+    <div class="card-zone" style="position:relative">
       <div class="card-3d" id="card3d" onclick="this.classList.toggle('flipped')">
         <div class="card-face">
           <div class="card-tap-hint">Çevirmek için dokun</div>
@@ -784,6 +870,7 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
           <div class="card-tense" id="cardTense" style="display:none">Tense</div>
         </div>
       </div>
+      <div class="swipe-hint">← Yanlış &nbsp;·&nbsp; Doğru →</div>
     </div>
     <div class="btn-row">
       <button class="action-btn btn-wrong" onclick="cardStep(false)"><i class="fa-solid fa-xmark"></i></button>
@@ -846,7 +933,11 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
       <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
     </div>
     <div class="profile-hero">
-      <div class="profile-avatar" id="profAvatar">😊</div>
+      <div class="profile-avatar" id="profAvatar" onclick="changePhoto()">
+        <span id="profAvatarEmoji">😊</span>
+        <div class="prof-photo-overlay"><i class="fa-solid fa-camera" style="font-size:.9rem"></i></div>
+      </div>
+      <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handlePhotoFile(this)">
       <div class="profile-name" id="profName">Öğrenci</div>
       <div class="profile-email" id="profEmail"></div>
       <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px">
@@ -1056,16 +1147,19 @@ let DB = {grammar:null, phrase:null, exams:null};
 ================================================================ */
 const USER_KEY = 'LV_PG_V2';
 let user = {
-  name:'Öğrenci', avatar:'😊', email:'', lang:'EN', dailyGoal:10,
-  onboarded:false, studyMode:'both',
+  name:'Öğrenci', avatar:'😊', photo:null, email:'', lang:'EN', dailyGoal:10,
+  onboarded:false, studyMode:'both', startLevel:'A1',
   streak:0, lastDate:null,
   weekDays:[false,false,false,false,false,false,false],
   darkMode:false,
+  notifications:false,
   progress:{grammar:{}, phrase:{}},  // {A1:{done:0,total:40}}
   quizHistory:[],
   stats:{totalCards:0, correctCards:0, quizCount:0},
   todayStats:{cards:0, sets:0, grammarSets:0, phraseSets:0, quizzes:0, date:null},
-  levelExams:{}  // {A1:{passed:false, lastAttempt:null, score:null}}
+  levelExams:{},  // {A1:{passed:false, lastAttempt:null, score:null}}
+  srsQueue:[],    // [{mode,level,setIdx,cardIdx,nextDate}]
+  weeklyStats:{week:null, grammarSets:0, phraseSets:0, cards:0}
 };
 function saveUser(){ localStorage.setItem(USER_KEY, JSON.stringify(user)); }
 function loadUser(){
@@ -1075,7 +1169,8 @@ function loadUser(){
 /* ================================================================
    SESSION
 ================================================================ */
-let S = {mode:'grammar', level:'A1', setIdx:0, cardIdx:0, examIdx:0, quizIdx:0, quizAnswers:[], levelExamLvl:null};
+let S = {mode:'grammar', level:'A1', setIdx:0, cardIdx:0, examIdx:0, quizIdx:0, quizAnswers:[], levelExamLvl:null, wrongCards:[]};
+let _swipeInited = false;
 
 /* ================================================================
    THEME
@@ -1164,6 +1259,15 @@ function renderHome(){
   document.querySelectorAll('.lang-btn').forEach(b=>{
     b.classList.toggle('active', b.textContent===(user.lang||'EN'));
   });
+
+  /* Haftalık stats rotasyonu ve bildirim */
+  checkAndRotateWeeklyStats();
+  setTimeout(checkStudyReminder, 3000);
+
+  /* SRS tekrar kuyruğu */
+  const oldSRS = document.getElementById('srsHomeCard');
+  if(oldSRS) oldSRS.remove();
+  checkSRSQueue();
 }
 
 function goLevelDirect(lvlId){
@@ -1244,8 +1348,11 @@ function goSets(lvlId){
 function startGame(idx){
   S.setIdx  = idx;
   S.cardIdx = 0;
+  S.wrongCards = [];
+  S.srsReviewCards = null;
   renderCard();
   show('scrGame');
+  initGameSwipe();
 }
 
 function renderCard(){
@@ -1267,8 +1374,13 @@ function renderCard(){
 }
 
 function cardStep(ok){
+  // SRS review mode
+  if(S.srsReviewCards){ srsStep(ok); return; }
+
+  playSound(ok ? 'correct' : 'wrong');
   user.stats.totalCards++;
   if(ok) user.stats.correctCards++;
+  else S.wrongCards.push(S.cardIdx); // track wrong card index
 
   /* Daily tracking */
   const today = new Date().toDateString();
@@ -1288,13 +1400,23 @@ function cardStep(ok){
     user.todayStats.sets++;
     if(S.mode==='grammar') user.todayStats.grammarSets=(user.todayStats.grammarSets||0)+1;
     else user.todayStats.phraseSets=(user.todayStats.phraseSets||0)+1;
+    /* Haftalık stats güncelle */
+    if(!user.weeklyStats) user.weeklyStats={week:_getWeekId(),grammarSets:0,phraseSets:0,cards:0};
+    if(S.mode==='grammar') user.weeklyStats.grammarSets=(user.weeklyStats.grammarSets||0)+1;
+    else user.weeklyStats.phraseSets=(user.weeklyStats.phraseSets||0)+1;
+    user.weeklyStats.cards=(user.weeklyStats.cards||0)+set.items.length;
     updateStreak();
     saveUser();
+    playSound('complete');
     notify('Set tamamlandı! Tebrikler 🎉','success');
     const completedLevel = S.level;
+    const wrongCopy = [...S.wrongCards];
+    S.wrongCards = [];
     goSets(S.level);
+    /* SRS prompt if wrong cards */
+    if(wrongCopy.length > 0) setTimeout(()=>showSRSPrompt(wrongCopy), 600);
     /* Check if entire level is now complete → trigger level exam */
-    setTimeout(()=>checkLevelComplete(completedLevel), 800);
+    setTimeout(()=>checkLevelComplete(completedLevel), wrongCopy.length > 0 ? 0 : 800);
     return;
   }
   renderCard();
@@ -1312,6 +1434,339 @@ function speak(){
   const u = new SpeechSynthesisUtterance(txt);
   u.lang='en-US';
   speechSynthesis.speak(u);
+}
+
+/* ================================================================
+   SES EFEKTLERİ — Web Audio API
+================================================================ */
+let _audioCtx = null;
+function _getACtx(){ return _audioCtx || (_audioCtx = new (window.AudioContext||window.webkitAudioContext)()); }
+function playSound(type){
+  try {
+    const ctx = _getACtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if(type === 'correct'){
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(660, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + .1);
+      gain.gain.setValueAtTime(.22, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .4);
+      osc.start(); osc.stop(ctx.currentTime + .4);
+    } else if(type === 'wrong'){
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(250, ctx.currentTime);
+      osc.frequency.setValueAtTime(180, ctx.currentTime + .15);
+      gain.gain.setValueAtTime(.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .3);
+      osc.start(); osc.stop(ctx.currentTime + .3);
+    } else if(type === 'complete'){
+      [523, 659, 784].forEach((freq, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'sine'; o.frequency.value = freq;
+        const t = ctx.currentTime + i * .14;
+        g.gain.setValueAtTime(.18, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + .28);
+        o.start(t); o.stop(t + .28);
+      });
+    }
+  } catch(e){}
+}
+
+/* ================================================================
+   SWIPE GESTURE (kart oyunu)
+================================================================ */
+function initGameSwipe(){
+  if(_swipeInited) return;
+  _swipeInited = true;
+  const screen = document.getElementById('scrGame');
+  let sx = 0, sy = 0, st = 0;
+  screen.addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
+  }, {passive: true});
+  screen.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    const dt = Date.now() - st;
+    if(dt > 650 || Math.abs(dx) < 55 || Math.abs(dy) > Math.abs(dx) * 1.4) return;
+    if(dx > 55) cardStep(true);
+    else if(dx < -55) cardStep(false);
+  }, {passive: true});
+}
+
+/* ================================================================
+   KARANLIK MOD GEÇİŞ ANİMASYONU
+================================================================ */
+function toggleDark(){
+  document.body.classList.add('theme-transitioning');
+  user.darkMode = !user.darkMode;
+  document.body.classList.toggle('dark-mode', user.darkMode);
+  saveUser();
+  setTimeout(() => document.body.classList.remove('theme-transitioning'), 500);
+}
+
+/* ================================================================
+   BİLDİRİMLER
+================================================================ */
+let _notifShownThisSession = false;
+async function requestNotifications(){
+  if(!('Notification' in window)){ notify('Tarayıcınız bildirim desteklemiyor', ''); return; }
+  const perm = await Notification.requestPermission();
+  if(perm === 'granted'){
+    user.notifications = true; saveUser();
+    notify('Günlük hatırlatıcı açıldı 🔔', 'success');
+    renderProfile();
+  } else {
+    notify('Bildirim izni reddedildi', '');
+  }
+}
+function disableNotifications(){
+  user.notifications = false; saveUser();
+  notify('Hatırlatıcı kapatıldı', '');
+  renderProfile();
+}
+function checkStudyReminder(){
+  if(_notifShownThisSession || !user.notifications) return;
+  if(typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  const today = new Date().toDateString();
+  if(user.todayStats?.date === today && (user.todayStats.cards || 0) > 0) return;
+  _notifShownThisSession = true;
+  try {
+    new Notification('LinguiVance 📚', {
+      body: 'Bugün henüz çalışmadın! Serini kaybetme 🔥',
+      icon: './icons/icon-192.png'
+    });
+  } catch(e){}
+}
+
+/* ================================================================
+   HAFTALIK ÖZET
+================================================================ */
+function _getWeekId(d = new Date()){
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  return d.getFullYear() + '-W' + Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+}
+function checkAndRotateWeeklyStats(){
+  const wk = _getWeekId();
+  if(!user.weeklyStats) user.weeklyStats = {week: wk, grammarSets:0, phraseSets:0, cards:0};
+  if(user.weeklyStats.week && user.weeklyStats.week !== wk){
+    const prev = {...user.weeklyStats};
+    try { localStorage.setItem('lv_pg_last_week', JSON.stringify(prev)); } catch(e){}
+    user.weeklyStats = {week: wk, grammarSets:0, phraseSets:0, cards:0};
+    saveUser();
+    const shownKey = 'lv_pg_wk_shown_' + wk;
+    const hasActivity = (prev.grammarSets + prev.phraseSets) > 0;
+    if(hasActivity && !localStorage.getItem(shownKey)){
+      localStorage.setItem(shownKey, '1');
+      setTimeout(() => showWeeklySummary(prev), 2000);
+    }
+  }
+}
+function showWeeklySummary(data){
+  const total = (data.grammarSets || 0) + (data.phraseSets || 0);
+  let emoji = '📚', msg = 'Az çalışılsa da bir başlangıç. Bu hafta daha fazlası için gayret et! 🐢';
+  if(total >= 20){ emoji = '🏆'; msg = 'Mükemmel bir hafta geçirdin! Bu tempo ile çok hızlı gelişiyorsun 🔥'; }
+  else if(total >= 10){ emoji = '⭐'; msg = 'Harika bir hafta! Hedefe ulaşmak için devam et 💪'; }
+  else if(total >= 5){ emoji = '🌱'; msg = 'Güzel bir başlangıç! Her set seni biraz daha ilerletiyor 📖'; }
+  document.getElementById('weeklyEmoji').textContent = emoji;
+  document.getElementById('weeklyStatsGrid').innerHTML = `
+    <div class="weekly-stat-box"><div class="weekly-stat-val">${data.grammarSets||0}</div><div class="weekly-stat-lbl">Gramer Set</div></div>
+    <div class="weekly-stat-box"><div class="weekly-stat-val">${data.phraseSets||0}</div><div class="weekly-stat-lbl">Kalıp Set</div></div>
+    <div class="weekly-stat-box"><div class="weekly-stat-val">${data.cards||0}</div><div class="weekly-stat-lbl">Kart</div></div>
+    <div class="weekly-stat-box"><div class="weekly-stat-val">${total}</div><div class="weekly-stat-lbl">Toplam Set</div></div>`;
+  document.getElementById('weeklyMsg').innerHTML = `<span style="font-size:.9rem;font-weight:600;color:var(--lvl-dark)">${msg}</span>`;
+  const modal = document.getElementById('weeklyModal');
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => modal.classList.add('show'));
+}
+function closeWeeklySummary(){
+  const modal = document.getElementById('weeklyModal');
+  modal.classList.remove('show');
+  setTimeout(() => modal.style.display = 'none', 300);
+}
+
+/* ================================================================
+   SRS — TEKRAR SİSTEMİ
+================================================================ */
+function showSRSPrompt(wrongCards){
+  // wrongCards: array of cardIdx values that were wrong
+  const sheet = document.createElement('div');
+  sheet.className = 'lvl-exam-prompt show';
+  sheet.id = 'srsPrompt';
+  sheet.innerHTML = `
+    <div class="lvl-exam-sheet">
+      <div class="lvl-exam-icon">🔄</div>
+      <div class="lvl-exam-title">${wrongCards.length} Kart Yanlış</div>
+      <div class="lvl-exam-sub">Bu kartları şimdi tekrar çalışmak ister misin? Yarın için de kaydedilecek.</div>
+      <button class="lvl-exam-enter-btn" onclick="startSRSReview(${JSON.stringify(wrongCards).replace(/"/g,"'")}); document.getElementById('srsPrompt').remove()">Tekrar Çalış 🔄</button>
+      <button class="lvl-exam-later-btn" onclick="document.getElementById('srsPrompt').remove()">Sonra</button>
+    </div>`;
+  document.body.appendChild(sheet);
+  // Save to next-day queue
+  wrongCards.forEach(ci => {
+    if(!user.srsQueue) user.srsQueue = [];
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    user.srsQueue.push({mode:S.mode, level:S.level, setIdx:S.setIdx, cardIdx:ci, nextDate: tomorrow.toDateString()});
+  });
+  saveUser();
+}
+function startSRSReview(wrongCardIndices){
+  // Build a mini set from the wrong cards
+  const fullSet = DB[S.mode].db[S.level][S.setIdx];
+  S.srsReviewCards = wrongCardIndices.map(i => fullSet.items[i]);
+  S.srsReviewIdx = 0;
+  S.wrongCards = [];
+  renderSRSCard();
+  show('scrGame');
+}
+function renderSRSCard(){
+  const item = S.srsReviewCards[S.srsReviewIdx];
+  const total = S.srsReviewCards.length;
+  document.getElementById('card3d').classList.remove('flipped');
+  document.getElementById('gameChip').textContent = `${S.srsReviewIdx + 1} / ${total} ↩`;
+  document.getElementById('cardQ').textContent = item.eng;
+  let tr = item.tr || '', tense = '';
+  const m = tr.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  if(m){ tr = m[1].trim(); tense = m[2]; }
+  document.getElementById('cardA').textContent = tr;
+  const tEl = document.getElementById('cardTense');
+  tEl.textContent = tense; tEl.style.display = tense ? 'inline-block' : 'none';
+}
+function srsStep(ok){
+  if(!S.srsReviewCards) return;
+  S.srsReviewIdx++;
+  if(S.srsReviewIdx >= S.srsReviewCards.length){
+    S.srsReviewCards = null;
+    notify('Tekrar tamamlandı! 🎉', 'success');
+    playSound('complete');
+    goSets(S.level);
+    return;
+  }
+  renderSRSCard();
+}
+function checkSRSQueue(){
+  if(!user.srsQueue || user.srsQueue.length === 0) return;
+  const today = new Date().toDateString();
+  const due = user.srsQueue.filter(c => c.nextDate === today || new Date(c.nextDate) <= new Date());
+  if(due.length === 0) return;
+  // Show SRS card on home
+  const existing = document.getElementById('srsHomeCard');
+  if(existing) return;
+  const card = document.createElement('div');
+  card.id = 'srsHomeCard';
+  card.className = 'srs-card';
+  card.innerHTML = `
+    <div class="srs-card-icon">🔄</div>
+    <div class="srs-card-info">
+      <div class="srs-card-title">Tekrar Zamanı!</div>
+      <div class="srs-card-sub">${due.length} kart tekrar bekliyor</div>
+    </div>
+    <button class="srs-card-btn" onclick="startQueuedSRS()">Başla</button>`;
+  const featureBtns = document.querySelector('#scrHome .feature-btns');
+  if(featureBtns) featureBtns.parentNode.insertBefore(card, featureBtns);
+}
+function startQueuedSRS(){
+  const today = new Date().toDateString();
+  const due = (user.srsQueue || []).filter(c => c.nextDate === today || new Date(c.nextDate) <= new Date());
+  if(due.length === 0){ notify('Tekrar edilecek kart yok', ''); return; }
+  // Remove shown from queue
+  user.srsQueue = (user.srsQueue || []).filter(c => !(c.nextDate === today || new Date(c.nextDate) <= new Date()));
+  saveUser();
+  // Use first item's context
+  const first = due[0];
+  S.mode = first.mode; S.level = first.level; S.setIdx = first.setIdx;
+  const indices = due.filter(c => c.mode === first.mode && c.level === first.level && c.setIdx === first.setIdx).map(c => c.cardIdx);
+  startSRSReview(indices);
+}
+
+/* ================================================================
+   PROFİL FOTOĞRAFI
+================================================================ */
+function changePhoto(){
+  document.getElementById('profilePhotoInput').click();
+}
+function handlePhotoFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 800000){ notify('Fotoğraf 800KB\'dan küçük olmalı', ''); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    user.photo = e.target.result;
+    saveUser();
+    renderProfile();
+    notify('Fotoğraf güncellendi ✓', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ================================================================
+   ONBOARDING SEVIYE TESTİ
+================================================================ */
+let OB_LEVEL = {answers:[], qIdx:0};
+const OB_LEVEL_THRESHOLDS = [
+  {min:0,  max:3,  level:'A1', emoji:'🌱', name:'Başlangıç'},
+  {min:4,  max:7,  level:'A2', emoji:'🌿', name:'Temel'},
+  {min:8,  max:11, level:'B1', emoji:'🌳', name:'Orta'},
+  {min:12, max:15, level:'B2', emoji:'🏕️', name:'Orta-Üstü'},
+  {min:16, max:18, level:'C1', emoji:'⛰️', name:'İleri'},
+  {min:19, max:20, level:'C2', emoji:'🌌', name:'Uzman'},
+];
+function calcStartLevel(correct){
+  return OB_LEVEL_THRESHOLDS.find(t => correct >= t.min && correct <= t.max) || OB_LEVEL_THRESHOLDS[0];
+}
+function obStartLevelTest(){
+  OB_LEVEL = {answers:[], qIdx:0};
+  document.getElementById('obLevelIntro').style.display = 'none';
+  document.getElementById('obLevelTestQ').style.display = 'block';
+  obRenderLevelQ();
+}
+function obRenderLevelQ(){
+  const questions = DB.exams?.[0]?.sorular;
+  if(!questions){ obSkipLevelTest(); return; }
+  const q = questions[OB_LEVEL.qIdx];
+  const total = questions.length;
+  document.getElementById('obLevelProgBar').style.width = ((OB_LEVEL.qIdx / total) * 100) + '%';
+  document.getElementById('obLevelQNum').textContent = `${OB_LEVEL.qIdx + 1} / ${total}`;
+  document.getElementById('obLevelQuestion').textContent = q.soru_metni;
+  document.getElementById('obLevelOptions').innerHTML = Object.entries(q.secenekler).map(([k, v]) =>
+    `<button class="ob-level-opt" onclick="obLevelPick('${k}','${q.dogru_cevap}',this)">${k}) ${v}</button>`
+  ).join('');
+}
+function obLevelPick(chosen, correct, btn){
+  // Disable all buttons
+  document.querySelectorAll('.ob-level-opt').forEach(b => b.disabled = true);
+  btn.classList.add(chosen === correct ? 'correct' : 'wrong');
+  if(chosen !== correct){
+    document.querySelectorAll('.ob-level-opt').forEach(b => {
+      if(b.textContent.startsWith(correct + ')')) b.classList.add('correct');
+    });
+  }
+  OB_LEVEL.answers.push(chosen === correct);
+  setTimeout(() => {
+    OB_LEVEL.qIdx++;
+    const questions = DB.exams[0].sorular;
+    if(OB_LEVEL.qIdx >= questions.length){
+      obLevelTestFinish();
+    } else {
+      obRenderLevelQ();
+    }
+  }, 600);
+}
+function obLevelTestFinish(){
+  const correct = OB_LEVEL.answers.filter(Boolean).length;
+  const result = calcStartLevel(correct);
+  OB.startLevel = result.level;
+  document.getElementById('obLevelTestQ').style.display = 'none';
+  document.getElementById('obLevelTestResult').style.display = 'block';
+  document.getElementById('obLevelResultEmoji').textContent = result.emoji;
+  document.getElementById('obLevelResultTitle').textContent = `Seviyeniz: ${result.level} — ${result.name}`;
+  document.getElementById('obLevelResultSub').textContent = `${correct}/20 doğru · Bu seviyeden çalışmaya başlıyorsunuz`;
+}
+function obSkipLevelTest(){
+  OB.startLevel = 'A1';
+  obFinish();
 }
 
 /* ================================================================
@@ -1485,8 +1940,14 @@ function showResult(){
 function renderProfile(){
   const session = getAuthSession();
 
-  /* Avatar & name */
-  document.getElementById('profAvatar').textContent = user.avatar||'😊';
+  /* Avatar & name — fotoğraf veya emoji */
+  const avatarEl = document.getElementById('profAvatar');
+  const emojiSpan = document.getElementById('profAvatarEmoji');
+  if(user.photo){
+    emojiSpan.innerHTML = `<img src="${user.photo}" class="prof-photo-img" alt="avatar">`;
+  } else {
+    emojiSpan.textContent = user.avatar || '😊';
+  }
   const displayName = session ? session.name.split(' ')[0] : (user.name||'Öğrenci');
   document.getElementById('profName').textContent = displayName;
   const displayEmail = session ? session.email : (user.email||'');
@@ -1558,9 +2019,10 @@ function renderProfile(){
       <div class="menu-icon" style="background:#f0fdf4;color:#16a34a"><i class="fa-solid fa-user-pen"></i></div>
       <span>İsim Düzenle</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
     </div>
-    <div class="menu-item" onclick="notify('Bildirim ayarları yakında!','success')">
+    <div class="menu-item" onclick="${user.notifications ? 'disableNotifications()' : 'requestNotifications()'}">
       <div class="menu-icon" style="background:#fff7ed;color:#ea580c"><i class="fa-solid fa-bell"></i></div>
-      <span>Bildirim Ayarları</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+      <span>Günlük Hatırlatıcı</span>
+      <button class="toggle-sw ${user.notifications?'on':''}" onclick="event.stopPropagation();${user.notifications ? 'disableNotifications()' : 'requestNotifications()'}"></button>
     </div>
     <div class="menu-item" onclick="toggleDark();renderProfile()">
       <div class="menu-icon"><i class="fa-solid fa-moon"></i></div>
@@ -1716,14 +2178,7 @@ function updateStreak(){
   user.weekDays[dow]=true;
 }
 
-/* ================================================================
-   DARK MODE
-================================================================ */
-function toggleDark(){
-  user.darkMode=!user.darkMode;
-  document.body.classList.toggle('dark-mode',user.darkMode);
-  saveUser();
-}
+/* toggleDark defined above with animation */
 
 /* ================================================================
    NOTIFY
@@ -2123,18 +2578,34 @@ function obGotoStep(s){
   window.scrollTo(0,0);
 }
 
-/* 2-step onboarding: step0=avatar, step1=study */
+/* 3-step onboarding: step0=avatar, step1=study, step2=level test */
 function obNext(from){
-  if(from===0){ obGotoStep(1); }
+  if(from === 0){ obGotoStep(1); }
+  else if(from === 1){
+    OB.startLevel = 'A1';
+    OB_LEVEL = {answers:[], qIdx:0};
+    document.getElementById('obLevelIntro').style.display = 'block';
+    document.getElementById('obLevelTestQ').style.display = 'none';
+    document.getElementById('obLevelTestResult').style.display = 'none';
+    obGotoStep(2);
+  }
 }
-function obBack(from){ obGotoStep(from-1); }
+function obBack(from){
+  if(from === 2){
+    document.getElementById('obLevelIntro').style.display = 'block';
+    document.getElementById('obLevelTestQ').style.display = 'none';
+    document.getElementById('obLevelTestResult').style.display = 'none';
+  }
+  obGotoStep(from - 1);
+}
 
 function obFinish(){
   const choice = OB_CHOICES.find(c=>c.id===OB.studyMode);
-  user.avatar    = OB.avatar;
-  user.studyMode = OB.studyMode;
-  user.dailyGoal = choice?.goal || 10;
-  user.onboarded = true;
+  user.avatar     = OB.avatar;
+  user.studyMode  = OB.studyMode;
+  user.dailyGoal  = choice?.goal || 10;
+  user.startLevel = OB.startLevel || 'A1';
+  user.onboarded  = true;
   saveUser();
 
   document.getElementById('scrOnboard').classList.add('hidden');
