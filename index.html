@@ -1,195 +1,2444 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master Suite v19.4 - LOCKED DESIGN</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg: #F0F4F8; --white: #FFFFFF; --primary: #1A73E8;
-            --A1: #FF5E57; --A2: #FF8D52; --B1: #FFBC52; --B2: #05C46B; --C1: #0FBCE9; --C2: #575fcf;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background: var(--bg); }
-        .app-shell { width: 100%; height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; background: var(--bg); position: relative; }
-        .screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.2s ease; position: absolute; width: 100%; top: 0; left: 0; }
-        .active-screen { display: flex; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>LinguiVance — Gramer & Kalıplar</title>
+<meta name="description" content="Kişiselleştirilmiş İngilizce öğrenme uygulaması. CEFR seviye bazlı gramer ve kalıp setleri ile akıllı ilerleme takibi.">
+<meta name="keywords" content="ingilizce öğren, gramer, kelime, dil öğrenme, CEFR, A1, B2, C1">
+<meta name="author" content="SenseLab">
+<meta name="theme-color" content="#16a34a">
+<!-- PWA Manifest -->
+<link rel="manifest" href="./manifest.json">
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LinguiVance">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<!-- Windows / Android -->
+<meta name="msapplication-TileColor" content="#16a34a">
+<meta name="msapplication-TileImage" content="./icons/icon-144.png">
+<!-- Open Graph (store listings & sharing) -->
+<meta property="og:title" content="LinguiVance — Gramer & Kalıplar">
+<meta property="og:description" content="Kişiselleştirilmiş İngilizce öğrenme uygulaması.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="./icons/icon-512.png">
 
-        /* HEADER & DASHBOARD */
-        .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .streak-hero { margin: 0 20px 20px; background: linear-gradient(135deg, #FF9F43 0%, #FF6B6B 100%); border-radius: 30px; padding: 25px; color: white; text-align: center; box-shadow: 0 15px 35px rgba(255,107,107,0.3); }
-        .streak-num { font-size: 60px; font-weight: 800; line-height: 1; }
-        .streak-days { display: flex; justify-content: space-between; margin-top: 20px; background: rgba(255,255,255,0.2); padding: 12px; border-radius: 20px; }
-        .day-dot { font-size: 10px; font-weight: 800; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); }
-        .day-dot.active { background: white; color: #FF6B6B; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Service Worker Registration -->
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    });
+  }
+</script>
 
-        /* MODE SELECTION */
-        .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 0 20px 25px; }
-        .mode-box { background: white; border-radius: 32px; padding: 35px 15px; text-align: center; box-shadow: var(--shadow); cursor: pointer; }
-        .mode-box i { font-size: 34px; display: block; margin-bottom: 12px; }
+<style>
+/* ============================================================
+   LinguiVance Master Template — Phrase & Grammar v2.0
+   ============================================================ */
+:root {
+  --btn-height: 62px;
+  /* Level palettes */
+  --sprout-main:#4ade80;  --sprout-dark:#16a34a;  --sprout-soft:#f0fdf4;
+  --sapling-main:#34d399; --sapling-dark:#059669; --sapling-soft:#ecfdf5;
+  --tree-main:#fbbf24;    --tree-dark:#d97706;    --tree-soft:#fffbeb;
+  --forest-main:#fb923c;  --forest-dark:#ea580c;  --forest-soft:#fff7ed;
+  --mountain-main:#f87171;--mountain-dark:#dc2626;--mountain-soft:#fef2f2;
+  --galaxy-main:#a78bfa;  --galaxy-dark:#7c3aed;  --galaxy-soft:#f5f3ff;
+  /* Active level (defaults Sprout) */
+  --lvl-main: var(--sprout-main);
+  --lvl-dark: var(--sprout-dark);
+  --lvl-soft: var(--sprout-soft);
+  /* Base tokens */
+  --bg:        #f8fafc;
+  --surface:   #ffffff;
+  --border:    #e2e8f0;
+  --text:      #1e293b;
+  --muted:     #64748b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,.12);
+  --r: 18px;
+}
+/* Level theme overrides */
+body[data-level="A1"]{ --lvl-main:var(--sprout-main);   --lvl-dark:var(--sprout-dark);   --lvl-soft:var(--sprout-soft); }
+body[data-level="A2"]{ --lvl-main:var(--sapling-main);  --lvl-dark:var(--sapling-dark);  --lvl-soft:var(--sapling-soft); }
+body[data-level="B1"]{ --lvl-main:var(--tree-main);     --lvl-dark:var(--tree-dark);     --lvl-soft:var(--tree-soft); }
+body[data-level="B2"]{ --lvl-main:var(--forest-main);   --lvl-dark:var(--forest-dark);   --lvl-soft:var(--forest-soft); }
+body[data-level="C1"]{ --lvl-main:var(--mountain-main); --lvl-dark:var(--mountain-dark); --lvl-soft:var(--mountain-soft); }
+body[data-level="C2"]{ --lvl-main:var(--galaxy-main);   --lvl-dark:var(--galaxy-dark);   --lvl-soft:var(--galaxy-soft); }
+/* Dark mode */
+body.dark-mode{ --bg:#0f172a; --surface:#1e293b; --border:#334155; --text:#f1f5f9; --muted:#94a3b8; }
 
-        /* LISTS */
-        .content-scroll { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
-        .lvl-card { background: white; border-radius: 22px; padding: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow); }
-        .prog-bar-bg { height: 8px; background: #F1F2F6; border-radius: 10px; margin-top: 8px; overflow: hidden; }
-        .prog-fill { height: 100%; transition: 0.8s; }
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; outline:none; }
+html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; padding-top:env(safe-area-inset-top,0px); }
 
-        /* 3D CARD GAME - SABİT ORTA TASARIM */
-        .card-zone { flex: 1; display: flex; align-items: center; justify-content: center; padding: 25px; perspective: 1200px; }
-        .card-3d { width: 100%; height: 400px; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .card-3d.flipped { transform: rotateY(180deg); }
-        .face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 45px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; box-shadow: 0 15px 45px rgba(0,0,0,0.1); }
-        .face-back { transform: rotateY(180deg); background: #f8f9fa; }
-        .tense-info { margin-top: 15px; font-size: 13px; color: var(--primary); font-weight: 600; background: #e8f0fe; padding: 5px 15px; border-radius: 10px; }
+/* ── APP SHELL ── */
+.app{ width:100%; max-width:480px; height:100%; background:var(--surface); box-shadow:0 0 40px rgba(0,0,0,.12); display:flex; flex-direction:column; position:relative; overflow:hidden; }
 
-        /* BUTTONS - TAM ORTADA VE SABİT */
-        .btn-row { padding: 30px; display: flex; justify-content: center; align-items: center; gap: 50px; background: transparent; }
-        .btn-circle { width: 85px; height: 85px; border-radius: 50%; border: none; color: white; font-size: 35px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+/* ── SCREENS ── */
+.screen{ display:none; flex-direction:column; position:absolute; width:100%; height:100%; top:0; left:0; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding-bottom:calc(75px + env(safe-area-inset-bottom,0px)); animation:fadeUp .25s ease; }
+.screen::-webkit-scrollbar{ width:0; }
+.screen.active{ display:flex; }
+/* Full screens — no tab offset, no scroll */
+#scrGame,#scrQuiz,#scrResult{ padding-bottom:0; overflow:hidden; }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
+/* ── TAB BAR ── */
+.tab-bar{ position:absolute; bottom:0; left:0; right:0; height:calc(70px + env(safe-area-inset-bottom,0px)); padding-bottom:env(safe-area-inset-bottom,0px); background:rgba(255,255,255,.93); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-top:1px solid var(--border); display:flex; align-items:center; z-index:100; transition:.3s; }
+.dark-mode .tab-bar{ background:rgba(30,41,59,.93); }
+.tab-bar.hidden{ transform:translateY(100%); }
+.tab-item{ flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 4px; cursor:pointer; border:none; background:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.6rem; font-weight:600; text-transform:uppercase; letter-spacing:.5px; transition:.2s; position:relative; }
+.tab-item i{ font-size:1.1rem; transition:.2s; }
+.tab-item.active{ color:var(--lvl-dark); }
+.tab-item.active i{ transform:translateY(-3px); }
+.tab-item.active::before{ content:''; position:absolute; top:0; left:20%; right:20%; height:3px; background:var(--lvl-main); border-radius:0 0 4px 4px; }
+
+/* ── TOP BAR ── */
+.top-bar{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px 10px; flex-shrink:0; }
+.logo-area{ display:flex; align-items:center; gap:10px; }
+.logo-icon{ width:42px; height:42px; background:var(--lvl-soft); border:1.5px solid var(--lvl-main); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--lvl-dark); font-size:1.1rem; }
+.logo-main{ font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--lvl-dark); letter-spacing:-.3px; line-height:1.1; }
+.logo-sub{ font-size:.62rem; font-weight:600; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.top-bar-actions{ display:flex; gap:8px; align-items:center; }
+.icon-btn{ width:38px; height:38px; border-radius:50%; border:none; background:var(--lvl-soft); color:var(--lvl-dark); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; }
+.icon-btn:hover{ background:var(--lvl-main); color:white; transform:scale(1.05); }
+.back-nav{ display:inline-flex; align-items:center; gap:6px; background:var(--lvl-soft); border:none; padding:8px 16px; border-radius:50px; cursor:pointer; font-weight:600; font-size:.85rem; color:var(--lvl-dark); transition:.2s; font-family:'DM Sans',sans-serif; }
+.back-nav:hover{ background:var(--lvl-main); color:white; }
+
+/* ── HERO CARD ── */
+.hero-card{ margin:0 20px 20px; background:linear-gradient(135deg,var(--lvl-main),var(--lvl-dark)); border-radius:24px; padding:22px 22px 18px; color:white; position:relative; overflow:hidden; flex-shrink:0; }
+.hero-card::before{ content:''; position:absolute; right:-30px; top:-30px; width:130px; height:130px; background:rgba(255,255,255,.12); border-radius:50%; }
+.hero-card::after{ content:''; position:absolute; right:40px; bottom:-40px; width:90px; height:90px; background:rgba(255,255,255,.08); border-radius:50%; }
+.hero-emoji{ font-size:2.6rem; display:block; line-height:1; margin-bottom:6px; z-index:1; position:relative; }
+.hero-streak{ font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; position:relative; z-index:1; }
+.hero-quote{ font-size:.8rem; opacity:.88; margin-top:4px; font-style:italic; position:relative; z-index:1; }
+
+/* ── WEEK ROW ── */
+.week-row{ display:flex; justify-content:space-between; gap:6px; margin-top:14px; position:relative; z-index:1; }
+.week-dot{ flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.week-dot .dot{ width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:rgba(255,255,255,.6); transition:.3s; }
+.week-dot .dot.done{ background:white; color:var(--lvl-dark); }
+.week-dot label{ font-size:.58rem; color:rgba(255,255,255,.75); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+
+/* ── LABELS / TITLES ── */
+.section-label{ padding:4px 22px 10px; font-size:.68rem; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; flex-shrink:0; }
+.screen-title{ font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--text); padding:4px 20px 16px; flex-shrink:0; }
+
+/* ── MODE GRID (Home) ── */
+.mode-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 20px 20px; }
+.mode-btn{ padding:24px 14px 20px; border-radius:20px; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; box-shadow:var(--shadow-sm); transition:.2s; position:relative; overflow:hidden; font-family:'DM Sans',sans-serif; }
+.mode-btn::before{ content:''; position:absolute; top:-20px; right:-20px; width:70px; height:70px; background:rgba(255,255,255,.15); border-radius:50%; }
+.mode-btn:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.mode-btn i{ font-size:1.9rem; color:white; z-index:1; }
+.mode-btn-name{ font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:white; z-index:1; }
+.mode-btn-sub{ font-size:.62rem; font-weight:600; color:rgba(255,255,255,.8); letter-spacing:.5px; text-transform:uppercase; z-index:1; }
+.mode-grammar{ background:linear-gradient(135deg,#a78bfa,#7c3aed); }
+.mode-phrase{ background:linear-gradient(135deg,#fb923c,#ea580c); }
+.mode-exam{ background:linear-gradient(135deg,#60a5fa,#2563eb); grid-column:1/-1; flex-direction:row; justify-content:center; padding:18px 20px; gap:14px; }
+.mode-exam i{ font-size:1.6rem; }
+
+/* ── LEVEL GRID ── */
+.level-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:0 20px 20px; }
+.level-btn{ height:106px; border:2.5px solid transparent; border-radius:18px; cursor:pointer; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; box-shadow:var(--shadow-sm); transition:.2s; padding:10px 4px; font-family:'DM Sans',sans-serif; }
+.level-btn .lv-emoji{ font-size:1.9rem; }
+.level-btn .lv-name{ font-family:'Playfair Display',serif; font-size:.88rem; font-weight:700; }
+.level-btn .lv-cefr{ font-size:.6rem; opacity:.85; letter-spacing:.5px; }
+.level-btn .lv-prog-bar{ width:75%; height:4px; background:rgba(255,255,255,.3); border-radius:10px; overflow:hidden; margin-top:2px; }
+.level-btn .lv-prog-fill{ height:100%; background:white; border-radius:10px; }
+.level-btn .lv-prog-txt{ font-size:.58rem; opacity:.85; }
+.level-btn:hover:not(.locked){ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.level-btn.locked{ opacity:.45; cursor:not-allowed; filter:grayscale(.6); }
+
+/* ── LIST CARDS ── */
+.list-card{ background:var(--surface); border-radius:var(--r); padding:14px 18px; margin:0 20px 10px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-sm); border:1.5px solid var(--border); cursor:pointer; transition:.2s; }
+.list-card:hover{ border-color:var(--lvl-main); box-shadow:var(--shadow-md); transform:translateX(3px); }
+.list-card-num{ width:38px; height:38px; border-radius:10px; background:var(--lvl-soft); color:var(--lvl-dark); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem; flex-shrink:0; transition:.2s; }
+.list-card-num.done{ background:var(--lvl-main); color:white; }
+.list-card-title{ font-family:'Playfair Display',serif; font-size:.9rem; font-weight:700; color:var(--text); }
+.list-card-sub{ font-size:.72rem; color:var(--muted); margin-top:2px; }
+.list-card-arrow{ color:var(--muted); margin-left:auto; font-size:.8rem; flex-shrink:0; }
+
+/* ── EXAM CARDS ── */
+.exam-card{ background:var(--surface); border-radius:var(--r); padding:16px 18px; margin:0 20px 10px; border:1.5px solid var(--border); box-shadow:var(--shadow-sm); cursor:pointer; transition:.2s; display:flex; align-items:center; gap:14px; }
+.exam-card:hover{ border-color:#60a5fa; box-shadow:var(--shadow-md); }
+.exam-card-icon{ width:50px; height:50px; border-radius:14px; background:linear-gradient(135deg,#60a5fa,#2563eb); color:white; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+.exam-card-name{ font-family:'Playfair Display',serif; font-size:.9rem; font-weight:700; color:var(--text); }
+.exam-card-sub{ font-size:.72rem; color:var(--muted); margin-top:3px; }
+.exam-score{ margin-left:auto; text-align:right; flex-shrink:0; }
+.exam-score-val{ font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:#2563eb; }
+.exam-score-lbl{ font-size:.58rem; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; }
+
+/* ── GAME SCREEN ── */
+#scrGame{ background:var(--bg); }
+.game-header{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; flex-shrink:0; }
+.game-chip{ background:var(--lvl-soft); border:1.5px solid var(--lvl-main); color:var(--lvl-dark); font-size:.73rem; font-weight:700; padding:5px 14px; border-radius:50px; letter-spacing:.3px; }
+
+/* ── 3D CARD ── */
+.card-zone{ flex:1; display:flex; align-items:center; justify-content:center; padding:12px 20px; perspective:1200px; min-height:0; }
+.card-3d{ width:100%; height:100%; max-height:420px; position:relative; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,0,.2,1); cursor:pointer; }
+.card-3d.flipped{ transform:rotateY(180deg); }
+.card-face{ position:absolute; width:100%; height:100%; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:24px; background:var(--surface); box-shadow:var(--shadow-md); border:2px solid var(--lvl-main); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px 24px; overflow:hidden; }
+.card-face::before{ content:''; position:absolute; top:-25px; right:-25px; width:100px; height:100px; background:var(--lvl-soft); border-radius:50%; }
+.card-face::after{ content:''; position:absolute; bottom:-30px; left:-20px; width:80px; height:80px; background:var(--lvl-soft); border-radius:50%; }
+.card-back{ transform:rotateY(180deg); border-color:var(--lvl-dark); background:var(--lvl-soft); }
+.card-back::before,.card-back::after{ opacity:.4; }
+.card-tap-hint{ font-size:.65rem; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; z-index:1; }
+.card-q{ font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:var(--text); line-height:1.35; z-index:1; }
+.card-a{ font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; color:var(--lvl-dark); line-height:1.35; z-index:1; }
+.card-tense{ margin-top:12px; background:white; color:var(--lvl-dark); font-size:.7rem; font-weight:700; padding:5px 16px; border-radius:50px; z-index:1; border:1.5px solid var(--lvl-main); }
+
+/* ── ACTION BUTTONS ── */
+.btn-row{ padding:16px 30px calc(14px + env(safe-area-inset-bottom,0px)); display:flex; justify-content:center; align-items:center; gap:40px; flex-shrink:0; background:var(--surface); border-top:1px solid var(--border); }
+.action-btn{ width:74px; height:74px; border-radius:50%; border:none; color:white; font-size:1.65rem; box-shadow:var(--shadow-md); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; }
+.action-btn:hover{ transform:scale(1.1); box-shadow:var(--shadow-lg); }
+.btn-wrong{ background:linear-gradient(135deg,#f87171,#ef4444); }
+.btn-right{ background:linear-gradient(135deg,#4ade80,#16a34a); }
+
+/* ── QUIZ SCREEN ── */
+#scrQuiz{ background:var(--bg); }
+.quiz-header{ padding:14px 20px; flex-shrink:0; background:var(--surface); border-bottom:1px solid var(--border); }
+.quiz-prog-bg{ height:5px; background:var(--border); border-radius:10px; overflow:hidden; margin-top:10px; }
+.quiz-prog-fill{ height:100%; background:linear-gradient(90deg,#60a5fa,#2563eb); border-radius:10px; transition:width .4s ease; }
+.quiz-body{ flex:1; overflow-y:auto; padding:20px; }
+.quiz-body::-webkit-scrollbar{ width:0; }
+.quiz-num{ font-size:.68rem; font-weight:700; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.quiz-q{ font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--text); line-height:1.5; margin-bottom:20px; }
+.quiz-opts{ display:flex; flex-direction:column; gap:10px; }
+.quiz-opt{ display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; transition:.2s; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; color:var(--text); }
+.quiz-opt:hover:not(.disabled){ border-color:#60a5fa; background:#eff6ff; }
+.opt-letter{ width:30px; height:30px; border-radius:50%; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; flex-shrink:0; }
+.quiz-opt.correct{ border-color:#16a34a; background:#f0fdf4; }
+.quiz-opt.correct .opt-letter{ background:#16a34a; color:white; }
+.quiz-opt.wrong{ border-color:#dc2626; background:#fef2f2; }
+.quiz-opt.wrong .opt-letter{ background:#dc2626; color:white; }
+.quiz-opt.disabled{ cursor:not-allowed; }
+.quiz-next{ width:100%; height:var(--btn-height); margin-top:18px; border-radius:var(--r); border:none; background:linear-gradient(135deg,#60a5fa,#2563eb); color:white; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; display:none; align-items:center; justify-content:center; gap:8px; transition:.2s; box-shadow:var(--shadow-sm); }
+.quiz-next.show{ display:flex; }
+.quiz-next:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+
+/* ── RESULT SCREEN ── */
+#scrResult{ background:var(--bg); overflow-y:auto; }
+#scrResult::-webkit-scrollbar{ width:0; }
+.result-hero{ margin:16px 20px; background:linear-gradient(135deg,#60a5fa,#2563eb); border-radius:24px; padding:28px 22px; color:white; text-align:center; position:relative; overflow:hidden; }
+.result-hero::before{ content:''; position:absolute; right:-30px; top:-30px; width:130px; height:130px; background:rgba(255,255,255,.12); border-radius:50%; }
+.res-emoji{ font-size:2.8rem; display:block; margin-bottom:8px; position:relative; z-index:1; }
+.res-score{ font-family:'Playfair Display',serif; font-size:3.5rem; font-weight:700; line-height:1; position:relative; z-index:1; }
+.res-label{ font-size:.82rem; opacity:.9; margin-top:6px; font-style:italic; position:relative; z-index:1; }
+.res-stats{ display:flex; gap:10px; margin:0 20px 16px; }
+.res-stat{ flex:1; background:var(--surface); border-radius:16px; padding:14px 10px; text-align:center; border:1.5px solid var(--border); box-shadow:var(--shadow-sm); }
+.res-stat-val{ font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; }
+.res-stat-lbl{ font-size:.6rem; color:var(--muted); font-weight:600; letter-spacing:.5px; text-transform:uppercase; margin-top:4px; }
+.detail-item{ display:flex; align-items:flex-start; gap:10px; padding:12px 0; border-bottom:1px solid var(--border); font-size:.84rem; color:var(--text); line-height:1.45; }
+.detail-icon{ font-size:.95rem; flex-shrink:0; margin-top:1px; }
+.detail-hint{ font-size:.75rem; color:var(--muted); margin-top:3px; }
+.btn-act{ width:100%; height:var(--btn-height); border:none; border-radius:var(--r); background:var(--lvl-main); color:white; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:.2s; box-shadow:var(--shadow-sm); }
+.btn-act:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.btn-secondary{ background:#475569; }
+
+/* ── PROFILE ── */
+.profile-hero{ text-align:center; padding:0 20px 20px; flex-shrink:0; }
+.profile-avatar{ width:88px; height:88px; border-radius:50%; border:3px solid var(--lvl-main); background:var(--lvl-soft); display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 12px; }
+.profile-name{ font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--text); }
+.profile-sub{ font-size:.78rem; color:var(--muted); margin-top:4px; }
+.profile-level-badge{ display:inline-flex; align-items:center; gap:6px; background:var(--lvl-soft); color:var(--lvl-dark); font-size:.75rem; font-weight:700; padding:5px 14px; border-radius:50px; margin-top:8px; letter-spacing:.5px; }
+/* Stat grid (dark) */
+.stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin:16px 20px 0; background:#1a1f2e; border-radius:18px; overflow:hidden; }
+.stat-tile{ text-align:center; padding:12px 6px 10px; position:relative; }
+.stat-tile::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--tile-color,var(--lvl-main)); border-radius:0; }
+.stat-tile+.stat-tile{ border-left:1px solid rgba(255,255,255,.07); }
+.stat-icon{ font-size:.95rem; display:block; margin-bottom:3px; }
+.stat-val{ font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:white; display:block; }
+.stat-lbl{ font-size:.55rem; color:rgba(255,255,255,.5); font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
+/* Badge grid */
+.badge-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:0 20px 20px; }
+.badge-item{ background:var(--surface); border-radius:14px; border:1.5px solid var(--border); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px 4px 10px; gap:5px; }
+.badge-item.earned{ background:var(--lvl-soft); border-color:var(--lvl-main); }
+.badge-item.locked{ filter:grayscale(1); opacity:.4; }
+.badge-emoji{ font-size:1.7rem; }
+.badge-name{ font-size:.58rem; font-weight:600; color:var(--muted); text-align:center; line-height:1.2; }
+/* Profile menu */
+.prof-menu{ margin:0 20px 20px; background:var(--surface); border-radius:var(--r); border:1.5px solid var(--border); }
+.menu-item{ display:flex; align-items:center; gap:14px; padding:14px 18px; cursor:pointer; transition:.2s; color:var(--text); background:none; width:100%; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; border:none; border-bottom:1px solid var(--border); box-sizing:border-box; }
+.menu-item:last-child{ border-bottom:none; }
+.menu-item:hover{ background:var(--lvl-soft); color:var(--lvl-dark); }
+.menu-icon{ width:34px; height:34px; border-radius:10px; background:var(--lvl-soft); color:var(--lvl-dark); display:flex; align-items:center; justify-content:center; font-size:.85rem; flex-shrink:0; }
+.menu-item.danger{ color:#dc2626; }
+.menu-item.danger .menu-icon{ background:#fef2f2; color:#dc2626; }
+.menu-item.danger:hover{ background:#fef2f2; }
+.menu-chevron{ margin-left:auto; font-size:.72rem; color:var(--muted); }
+
+/* ── LOADING ── */
+.loading-overlay{ position:fixed; inset:0; background:var(--surface); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; z-index:9000; transition:opacity .4s ease; }
+.loading-overlay.hidden{ opacity:0; pointer-events:none; }
+.loading-logo{ font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--sprout-dark); }
+.loading-spinner{ width:38px; height:38px; border:3px solid #e2e8f0; border-top-color:var(--sprout-main); border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ── NOTIFY TOAST ── */
+.notify{ position:fixed; top:20px; right:16px; padding:11px 18px; border-radius:12px; color:white; font-size:.83rem; font-weight:600; box-shadow:var(--shadow-lg); z-index:9999; transform:translateX(200%); transition:transform .3s ease; max-width:260px; }
+.notify.show{ transform:translateX(0); }
+.notify.success{ background:#16a34a; }
+.notify.error{ background:#dc2626; }
+
+/* ── AUTH STATUS (profile) ── */
+.auth-card{ margin:0 20px 16px; background:var(--lvl-soft); border:1.5px solid var(--lvl-main); border-radius:var(--r); padding:16px 18px; display:flex; align-items:center; gap:14px; }
+.auth-card-icon{ width:42px; height:42px; border-radius:12px; background:var(--lvl-main); color:white; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.auth-card-name{ font-family:'Playfair Display',serif; font-size:.95rem; font-weight:700; color:var(--text); }
+.auth-card-role{ font-size:.68rem; color:var(--muted); font-weight:600; letter-spacing:.5px; text-transform:uppercase; margin-top:2px; }
+.auth-logout-btn{ margin-left:auto; background:none; border:1.5px solid var(--border); color:var(--muted); font-size:.72rem; font-weight:600; padding:5px 12px; border-radius:50px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:.2s; flex-shrink:0; }
+.auth-logout-btn:hover{ border-color:#dc2626; color:#dc2626; }
+
+/* ── LOGIN BOTTOM SHEET ── */
+.modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:8000; display:none; align-items:flex-end; justify-content:center; }
+.modal-overlay.show{ display:flex; }
+.login-sheet{ width:100%; max-width:480px; background:var(--surface); border-radius:28px 28px 0 0; padding:28px 24px calc(28px + env(safe-area-inset-bottom,0px)); animation:slideUp .3s ease; max-height:85vh; overflow-y:auto; }
+@keyframes slideUp{ from{ transform:translateY(100%); opacity:0; } to{ transform:translateY(0); opacity:1; } }
+.sheet-handle{ width:40px; height:4px; background:var(--border); border-radius:10px; margin:0 auto 20px; }
+.sheet-title{ font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--text); margin-bottom:6px; }
+.sheet-sub{ font-size:.8rem; color:var(--muted); margin-bottom:22px; }
+.input-group{ margin-bottom:14px; }
+.input-label{ font-size:.72rem; font-weight:700; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px; display:block; }
+.input-field{ width:100%; height:48px; border:1.5px solid var(--border); border-radius:12px; padding:0 14px; font-family:'DM Sans',sans-serif; font-size:.9rem; color:var(--text); background:var(--surface); transition:.2s; }
+.input-field:focus{ border-color:var(--lvl-main); outline:none; box-shadow:0 0 0 3px var(--lvl-soft); }
+.input-error{ font-size:.73rem; color:#dc2626; margin-top:6px; display:none; }
+.input-error.show{ display:block; }
+.sheet-btn{ width:100%; height:var(--btn-height); border:none; border-radius:var(--r); background:var(--lvl-main); color:white; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; margin-top:6px; transition:.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.sheet-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.sheet-btn-sec{ background:var(--surface); color:var(--text); border:1.5px solid var(--border); margin-top:10px; }
+.sheet-btn-sec:hover{ background:var(--lvl-soft); color:var(--lvl-dark); transform:none; box-shadow:none; }
+
+/* ── PROFILE EMAIL ── */
+.profile-email{ font-size:.76rem; color:var(--muted); margin-top:3px; }
+/* ── ADMIN CHIP ── */
+.admin-chip{ display:inline-flex; align-items:center; gap:5px; background:#eff6ff; color:#2563eb; font-size:.68rem; font-weight:700; padding:4px 12px; border-radius:50px; border:1.5px solid #bfdbfe; }
+/* ── TOGGLE SWITCH ── */
+.toggle-sw{ position:relative; width:44px; height:25px; background:var(--border); border-radius:50px; cursor:pointer; transition:.3s; flex-shrink:0; border:none; padding:0; }
+.toggle-sw.on{ background:var(--lvl-main); }
+.toggle-sw::after{ content:''; position:absolute; top:3px; left:3px; width:19px; height:19px; border-radius:50%; background:white; transition:.3s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+.toggle-sw.on::after{ transform:translateX(19px); }
+/* ── SETTINGS VALUE BADGE ── */
+.menu-val{ margin-left:auto; font-size:.72rem; font-weight:700; color:var(--lvl-dark); background:var(--lvl-soft); padding:3px 10px; border-radius:50px; flex-shrink:0; }
+/* ── PROFILE FOOTER ── */
+.prof-footer{ text-align:center; color:var(--muted); font-size:.64rem; padding:8px 20px 34px; }
+/* ══════════════════════════════════════════
+   ONBOARDING
+══════════════════════════════════════════ */
+.onboard-overlay{ position:fixed; inset:0; background:var(--bg); z-index:8500; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 24px; overflow-y:auto; }
+.onboard-overlay.hidden{ display:none; }
+.ob-logo-wrap{ text-align:center; margin-bottom:24px; }
+.ob-logo-icon{ width:72px; height:72px; border-radius:20px; background:linear-gradient(135deg,var(--lvl-main),var(--lvl-dark)); display:flex; align-items:center; justify-content:center; font-size:2.2rem; margin:0 auto 10px; box-shadow:var(--shadow-md); }
+.ob-logo-name{ font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--lvl-dark); }
+.ob-logo-sub{ font-size:.65rem; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.ob-step{ display:none; flex-direction:column; align-items:center; width:100%; max-width:380px; animation:fadeUp .3s ease; }
+.ob-step.active{ display:flex; }
+.ob-title{ font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:var(--text); text-align:center; margin-bottom:8px; }
+.ob-sub{ font-size:.84rem; color:var(--muted); text-align:center; margin-bottom:22px; line-height:1.55; }
+.ob-dots{ display:flex; gap:7px; margin-bottom:28px; }
+.ob-dot{ width:8px; height:8px; border-radius:50%; background:var(--border); transition:.3s; }
+.ob-dot.done{ background:var(--lvl-dark); opacity:.45; }
+.ob-dot.active{ width:26px; border-radius:4px; background:var(--lvl-main); }
+/* Emoji picker */
+.ob-emoji-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; width:100%; margin-bottom:22px; }
+.ob-emoji-btn{ aspect-ratio:1; border-radius:16px; border:2.5px solid var(--border); background:var(--surface); font-size:1.85rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; line-height:1; }
+.ob-emoji-btn.selected{ border-color:var(--lvl-main); background:var(--lvl-soft); transform:scale(1.08); box-shadow:0 0 0 3px var(--lvl-soft); }
+.ob-emoji-btn:hover:not(.selected){ border-color:var(--lvl-main); transform:scale(1.04); }
+/* Study choices */
+.ob-choice-grid{ display:flex; flex-direction:column; gap:12px; width:100%; margin-bottom:22px; }
+.ob-choice{ padding:16px 18px; border-radius:18px; border:2.5px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:14px; transition:.2s; background:var(--surface); }
+.ob-choice.selected{ border-color:var(--lvl-main); background:var(--lvl-soft); }
+.ob-choice:hover:not(.selected){ border-color:var(--lvl-main); }
+.ob-choice-ico{ width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+.ob-choice-name{ font-family:'Playfair Display',serif; font-size:.98rem; font-weight:700; color:var(--text); }
+.ob-choice-sub{ font-size:.72rem; color:var(--muted); margin-top:2px; }
+/* Buttons */
+.ob-btn{ width:100%; height:58px; border-radius:18px; border:none; background:var(--lvl-main); color:white; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:.2s; box-shadow:var(--shadow-md); }
+.ob-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.ob-btn.ob-finish{ background:linear-gradient(135deg,var(--lvl-main),var(--lvl-dark)); font-size:1.05rem; }
+.ob-back-btn{ background:none; border:none; color:var(--muted); font-size:.82rem; cursor:pointer; margin-top:10px; padding:8px 16px; font-family:'DM Sans',sans-serif; transition:.2s; border-radius:50px; }
+.ob-back-btn:hover{ background:var(--lvl-soft); color:var(--lvl-dark); }
+
+/* ── LANG TOGGLE ── */
+.lang-toggle{ display:flex; background:var(--lvl-soft); border-radius:50px; padding:3px; gap:2px; border:1.5px solid var(--lvl-main); }
+.lang-btn{ padding:3px 11px; border-radius:50px; border:none; font-size:.68rem; font-weight:700; cursor:pointer; transition:.2s; background:none; color:var(--muted); font-family:'DM Sans',sans-serif; letter-spacing:.3px; }
+.lang-btn.active{ background:var(--lvl-main); color:white; }
+/* ── DAILY GOALS ── */
+.daily-goals{ padding:0 20px 16px; }
+.goals-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.goals-title{ font-size:.68rem; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.goals-target{ font-size:.72rem; color:var(--lvl-dark); font-weight:600; }
+.goals-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.goal-card{ background:var(--surface); border:1.5px solid var(--border); border-radius:14px; padding:12px 8px; text-align:center; box-shadow:var(--shadow-sm); }
+.goal-val{ font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--text); display:block; }
+.goal-lbl{ font-size:.58rem; color:var(--muted); font-weight:600; letter-spacing:.5px; text-transform:uppercase; margin-top:3px; display:block; }
+/* ── FEATURE BUTTONS ── */
+.feature-btns{ padding:0 20px 20px; display:flex; flex-direction:column; gap:10px; }
+.feature-btn{ width:100%; height:56px; border-radius:16px; border:none; cursor:pointer; display:flex; align-items:center; padding:0 18px; gap:14px; font-family:'DM Sans',sans-serif; font-size:.92rem; font-weight:600; transition:.2s; box-shadow:var(--shadow-sm); }
+.feature-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.feature-btn-icon{ width:32px; height:32px; border-radius:9px; background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.feature-btn-lbl{ color:white; }
+.feature-btn-arr{ margin-left:auto; color:rgba(255,255,255,.65); font-size:.72rem; }
+.fb-grammar{ background:linear-gradient(135deg,#a78bfa,#7c3aed); }
+.fb-phrase{ background:linear-gradient(135deg,#fb923c,#ea580c); }
+.fb-exam{ background:linear-gradient(135deg,#60a5fa,#2563eb); }
+/* ── STATS SUMMARY GRID ── */
+.stats-sum-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 16px 16px; }
+.stats-sum-card{ background:var(--surface); border:1.5px solid var(--border); border-radius:14px; padding:10px 6px; text-align:center; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; }
+.stats-sum-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--card-color,var(--lvl-main)); }
+.stats-sum-val{ font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--text); display:block; }
+.stats-sum-lbl{ font-size:.52rem; color:var(--muted); font-weight:600; letter-spacing:.3px; text-transform:uppercase; margin-top:3px; display:block; }
+.stats-sum-icon{ font-size:1.1rem; display:block; margin-bottom:4px; }
+/* ── STATS SCREEN ── */
+.stats-prog-card{ background:var(--surface); border-radius:var(--r); border:1.5px solid var(--border); padding:14px 16px; margin:0 20px 12px; box-shadow:var(--shadow-sm); }
+.stats-lvl-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.stats-lvl-row:last-child{ margin-bottom:0; }
+.stats-tag{ width:34px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:.62rem; font-weight:800; color:white; flex-shrink:0; }
+.stats-bar-bg{ flex:1; height:8px; background:var(--border); border-radius:10px; overflow:hidden; }
+.stats-bar-fill{ height:100%; border-radius:10px; }
+.stats-count{ font-size:.68rem; font-weight:700; color:var(--muted); min-width:55px; text-align:right; }
+.quiz-hist-card{ background:var(--surface); border:1.5px solid var(--border); border-radius:14px; padding:12px 16px; margin:0 20px 8px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-sm); }
+.quiz-hist-score{ font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; min-width:52px; }
+.quiz-hist-name{ font-size:.82rem; font-weight:600; color:var(--text); }
+.quiz-hist-date{ font-size:.68rem; color:var(--muted); margin-top:2px; }
+
+/* ── ADMIN PANEL ── */
+#scrAdmin{ background:var(--bg); padding-bottom:0; overflow-y:auto; }
+#scrAdmin.active{ display:flex; }
+.admin-header{ background:linear-gradient(135deg,#1e293b,#0f172a); padding:20px 20px 24px; flex-shrink:0; }
+.admin-header-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.admin-title{ font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:white; }
+.admin-close-btn{ width:34px; height:34px; border-radius:50%; border:none; background:rgba(255,255,255,.12); color:white; font-size:.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.admin-stat-row{ display:flex; gap:10px; }
+.admin-stat-box{ flex:1; background:rgba(255,255,255,.08); border-radius:12px; padding:12px 10px; text-align:center; }
+.admin-stat-val{ font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:white; display:block; }
+.admin-stat-lbl{ font-size:.58rem; color:rgba(255,255,255,.55); font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
+.admin-body{ flex:1; padding:20px; overflow-y:auto; }
+.admin-section{ margin-bottom:24px; }
+.admin-section-title{ font-size:.68rem; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+.admin-card{ background:var(--surface); border-radius:var(--r); border:1.5px solid var(--border); overflow:hidden; margin-bottom:10px; }
+.admin-row{ display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:.2s; }
+.admin-row:last-child{ border-bottom:none; }
+.admin-row:hover{ background:var(--lvl-soft); }
+.admin-row-icon{ width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:.9rem; color:white; flex-shrink:0; }
+.admin-row-name{ font-weight:600; font-size:.88rem; color:var(--text); }
+.admin-row-sub{ font-size:.72rem; color:var(--muted); margin-top:1px; }
+.admin-row-arrow{ margin-left:auto; font-size:.72rem; color:var(--muted); }
+/* Level breakdown in admin */
+.lvl-breakdown{ background:var(--surface); border-radius:var(--r); border:1.5px solid var(--border); padding:14px 16px; margin-bottom:10px; }
+.lvl-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.lvl-row:last-child{ margin-bottom:0; }
+.lvl-tag{ width:32px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:800; color:white; flex-shrink:0; }
+.lvl-bar-bg{ flex:1; height:8px; background:var(--border); border-radius:10px; overflow:hidden; }
+.lvl-bar-fill{ height:100%; border-radius:10px; }
+.lvl-count{ font-size:.72rem; font-weight:700; color:var(--muted); min-width:52px; text-align:right; }
+/* Admin password change */
+.admin-pw-section{ background:var(--surface); border-radius:var(--r); border:1.5px solid var(--border); padding:16px; margin-bottom:10px; }
+
+/* ══════════════════════════════════════════
+   AUTH SCREEN
+══════════════════════════════════════════ */
+.auth-overlay-full{ position:fixed; inset:0; background:#f1f5f9; z-index:9000; display:flex; align-items:center; justify-content:center; padding:24px; overflow-y:auto; }
+.auth-overlay-full.hidden{ display:none; }
+.dark-mode .auth-overlay-full{ background:#0f172a; }
+.auth-card-wrap{ width:100%; max-width:400px; background:var(--surface); border-radius:28px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.15); }
+.auth-hero{ background:linear-gradient(135deg,#16a34a,#4ade80); padding:32px 24px 24px; text-align:center; }
+.auth-globe{ font-size:2.8rem; display:block; margin-bottom:10px; }
+.auth-brand{ font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:white; letter-spacing:-.5px; }
+.auth-tagline{ font-size:.75rem; color:rgba(255,255,255,.8); font-weight:500; letter-spacing:.5px; margin-top:4px; }
+.auth-tabs{ display:flex; border-bottom:1px solid var(--border); }
+.auth-tab{ flex:1; padding:14px 0; text-align:center; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; border:none; background:none; color:var(--muted); transition:.2s; border-bottom:2.5px solid transparent; }
+.auth-tab.active{ color:#16a34a; border-bottom-color:#16a34a; }
+.auth-form-wrap{ padding:24px 24px 12px; }
+.auth-form-section{ display:none; }
+.auth-form-section.active{ display:block; }
+.auth-footer-txt{ text-align:center; font-size:.62rem; color:var(--muted); padding:12px 24px 20px; }
+.auth-submit-btn{ width:100%; height:54px; border-radius:16px; border:none; background:linear-gradient(135deg,#16a34a,#4ade80); color:white; font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:700; cursor:pointer; transition:.2s; box-shadow:0 4px 14px rgba(22,163,74,.3); margin-top:6px; }
+.auth-submit-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 20px rgba(22,163,74,.4); }
+.auth-forgot-link{ display:block; text-align:center; font-size:.76rem; color:#16a34a; text-decoration:none; cursor:pointer; margin-top:12px; font-weight:500; }
+.auth-forgot-link:hover{ text-decoration:underline; }
+/* Forgot password panel inside auth */
+.auth-reset-panel{ display:none; }
+.auth-reset-panel.active{ display:block; }
+.auth-reset-code-box{ background:#f0fdf4; border:1.5px solid #4ade80; border-radius:14px; padding:14px 16px; text-align:center; margin:12px 0; }
+.auth-reset-code{ font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:#16a34a; letter-spacing:6px; }
+.auth-reset-hint{ font-size:.7rem; color:var(--muted); margin-top:4px; }
+.auth-back-link{ background:none; border:none; color:var(--muted); font-size:.78rem; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:8px; width:100%; text-align:center; padding:6px; }
+.auth-back-link:hover{ color:var(--text); }
+
+/* ══════════════════════════════════════════
+   CERTIFICATE SCREEN
+══════════════════════════════════════════ */
+.cert-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9500; display:none; align-items:center; justify-content:center; padding:24px; }
+.cert-overlay.show{ display:flex; }
+.cert-card{ width:100%; max-width:360px; background:white; border-radius:28px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:fadeUp .4s ease; }
+.cert-header{ background:linear-gradient(135deg,#f59e0b,#fbbf24,#f59e0b); padding:28px 20px 22px; text-align:center; position:relative; }
+.cert-header::before{ content:''; position:absolute; inset:0; background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.25),transparent 60%); }
+.cert-trophy{ font-size:3rem; display:block; margin-bottom:8px; position:relative; z-index:1; }
+.cert-title{ font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:white; position:relative; z-index:1; text-shadow:0 1px 4px rgba(0,0,0,.2); }
+.cert-subtitle{ font-size:.72rem; color:rgba(255,255,255,.85); margin-top:4px; position:relative; z-index:1; }
+.cert-body{ padding:20px 22px; text-align:center; }
+.cert-name{ font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:#1e293b; }
+.cert-score-badge{ display:inline-flex; align-items:center; gap:6px; background:#f0fdf4; border:1.5px solid #4ade80; color:#16a34a; font-size:.88rem; font-weight:700; padding:6px 16px; border-radius:50px; margin:10px 0; }
+.cert-date{ font-size:.72rem; color:#64748b; margin-bottom:16px; }
+.cert-next-badge{ background:linear-gradient(135deg,var(--next-main,#4ade80),var(--next-dark,#16a34a)); color:white; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px; margin-bottom:16px; text-align:left; }
+.cert-next-emoji{ font-size:1.5rem; }
+.cert-next-lbl{ font-size:.68rem; color:rgba(255,255,255,.8); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+.cert-next-name{ font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:white; margin-top:2px; }
+.cert-btn{ width:100%; height:52px; border-radius:14px; border:none; background:linear-gradient(135deg,#16a34a,#4ade80); color:white; font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:700; cursor:pointer; transition:.2s; }
+.cert-btn:hover{ transform:translateY(-2px); }
+/* Level exam prompt modal */
+.lvl-exam-prompt{ position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9200; display:none; align-items:flex-end; justify-content:center; padding:0 0 0 0; }
+.lvl-exam-prompt.show{ display:flex; }
+.lvl-exam-sheet{ width:100%; max-width:480px; background:var(--surface); border-radius:28px 28px 0 0; padding:28px 24px calc(28px + env(safe-area-inset-bottom,0px)); animation:slideUp .3s ease; }
+@keyframes slideUp{ from{ transform:translateY(100%); } to{ transform:none; } }
+.lvl-exam-icon{ font-size:2.4rem; text-align:center; margin-bottom:12px; }
+.lvl-exam-title{ font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--text); text-align:center; margin-bottom:6px; }
+.lvl-exam-sub{ font-size:.82rem; color:var(--muted); text-align:center; line-height:1.5; margin-bottom:20px; }
+.lvl-exam-enter-btn{ width:100%; height:54px; border-radius:16px; border:none; background:linear-gradient(135deg,#16a34a,#4ade80); color:white; font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:700; cursor:pointer; transition:.2s; margin-bottom:10px; }
+.lvl-exam-later-btn{ width:100%; height:44px; border-radius:14px; border:1.5px solid var(--border); background:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; }
+</style>
 </head>
-<body>
+<body data-level="A1">
 
-<div class="app-shell">
-    <div id="scrMain" class="screen active-screen">
-        <div class="top-bar">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:42px; height:42px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); color:var(--primary);"><i class="fa-solid fa-graduation-cap"></i></div>
-                <div><b>Master Learner</b><br><small style="color:#808E9B">Hoş geldin!</small></div>
-            </div>
-            <i class="fa-solid fa-gear" style="font-size:24px; color:#5F6368;" onclick="nav('scrSetts')"></i>
-        </div>
+<!-- ══ LEGAL MODAL ══ -->
+<div class="modal-overlay" id="legalOverlay" onclick="if(event.target===this)closeLegal()" style="align-items:flex-end">
+  <div class="login-sheet" style="max-height:80vh;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="legalTitle">Gizlilik Politikası</div>
+    <div style="font-size:.82rem;color:var(--text);line-height:1.7;white-space:pre-wrap" id="legalContent"></div>
+    <button class="sheet-btn" style="margin-top:16px" onclick="closeLegal()">Kapat</button>
+  </div>
+</div>
 
-        <div class="streak-hero">
-            <span class="streak-num">4</span><br><b>Günlük Seri! Bravo Harika Gidiyorsun!</b>
-            <div class="streak-days" id="stGrid"></div>
-        </div>
+<!-- ══ AUTH SCREEN ══ -->
+<div class="auth-overlay-full hidden" id="scrAuth">
+  <div class="auth-card-wrap">
+    <!-- Header -->
+    <div class="auth-hero">
+      <span class="auth-globe">🌍</span>
+      <div class="auth-brand">LinguiVance</div>
+      <div class="auth-tagline">Learn English — Smart &amp; Adaptive</div>
+    </div>
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Giriş Yap</button>
+      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')">Kayıt Ol</button>
+    </div>
+    <!-- Forms -->
+    <div class="auth-form-wrap">
 
-        <div style="padding:0 25px 12px; font-weight:800; font-size:12px; color:#808E9B;">EĞİTİM MODLARI</div>
-        <div class="mode-grid">
-            <div class="mode-box" style="color:#6200EE" onclick="openMod('grammar')"><i class="fa-solid fa-brain"></i><b>GRAMMAR</b></div>
-            <div class="mode-box" style="color:#FF9900" onclick="openMod('phrase')"><i class="fa-solid fa-comments"></i><b>PHRASE</b></div>
+      <!-- Login form -->
+      <div class="auth-form-section active" id="authFormLogin">
+        <div class="input-group">
+          <label class="input-label">E-posta / Kullanıcı Adı</label>
+          <input class="input-field" type="text" id="authLoginId" placeholder="ornek@mail.com veya kullanıcı adı"
+                 autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('authLoginPw').focus()">
         </div>
+        <div class="input-group">
+          <label class="input-label">Şifre</label>
+          <input class="input-field" type="password" id="authLoginPw" placeholder="••••••••"
+                 autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthLoginClick()">
+        </div>
+        <div class="input-error" id="authLoginErr"></div>
+        <button class="auth-submit-btn" onclick="doAuthLoginClick()">Giriş Yap →</button>
+        <a class="auth-forgot-link" onclick="showForgotPanel()">Şifremi Unuttum</a>
+      </div>
+
+      <!-- Register form -->
+      <div class="auth-form-section" id="authFormRegister">
+        <div class="input-group">
+          <label class="input-label">Ad Soyad</label>
+          <input class="input-field" type="text" id="authRegName" placeholder="Adınız..."
+                 autocomplete="name" onkeydown="if(event.key==='Enter')document.getElementById('authRegEmail').focus()">
+        </div>
+        <div class="input-group">
+          <label class="input-label">E-posta</label>
+          <input class="input-field" type="email" id="authRegEmail" placeholder="ornek@mail.com"
+                 autocomplete="email" onkeydown="if(event.key==='Enter')document.getElementById('authRegPw').focus()">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Şifre <span style="color:var(--muted);font-weight:400">(en az 6 karakter)</span></label>
+          <input class="input-field" type="password" id="authRegPw" placeholder="••••••••"
+                 autocomplete="new-password" onkeydown="if(event.key==='Enter')document.getElementById('authRegPw2').focus()">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Şifre Tekrar</label>
+          <input class="input-field" type="password" id="authRegPw2" placeholder="••••••••"
+                 autocomplete="new-password" onkeydown="if(event.key==='Enter')doAuthRegisterClick()">
+        </div>
+        <div class="input-error" id="authRegErr"></div>
+        <button class="auth-submit-btn" onclick="doAuthRegisterClick()">Kayıt Ol →</button>
+      </div>
+
+      <!-- Forgot password panel -->
+      <div class="auth-reset-panel" id="authForgotPanel">
+        <div class="ob-title" style="font-size:1.1rem;margin-bottom:6px">Şifre Sıfırla</div>
+        <div class="ob-sub" style="font-size:.78rem;margin-bottom:16px">E-posta adresinizi girin, sıfırlama kodunuzu görelim.</div>
+        <div id="authForgotStep1">
+          <div class="input-group">
+            <label class="input-label">E-posta</label>
+            <input class="input-field" type="email" id="authForgotEmail" placeholder="ornek@mail.com"
+                   onkeydown="if(event.key==='Enter')doForgotStep1()">
+          </div>
+          <div class="input-error" id="authForgotErr1"></div>
+          <button class="auth-submit-btn" onclick="doForgotStep1()">Sıfırlama Kodu Gönder</button>
+        </div>
+        <div id="authForgotStep2" style="display:none">
+          <div class="auth-reset-code-box">
+            <div class="auth-reset-code" id="authResetCodeDisplay">------</div>
+            <div class="auth-reset-hint">Bu kodla yeni şifrenizi belirleyin</div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Sıfırlama Kodu</label>
+            <input class="input-field" type="text" id="authForgotCode" placeholder="6 haneli kod" maxlength="6"
+                   onkeydown="if(event.key==='Enter')document.getElementById('authNewPw').focus()">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Yeni Şifre</label>
+            <input class="input-field" type="password" id="authNewPw" placeholder="En az 6 karakter"
+                   onkeydown="if(event.key==='Enter')doForgotStep2()">
+          </div>
+          <div class="input-error" id="authForgotErr2"></div>
+          <button class="auth-submit-btn" onclick="doForgotStep2()">Şifreyi Güncelle</button>
+        </div>
+        <button class="auth-back-link" onclick="hideForgotPanel()">← Giriş ekranına dön</button>
+      </div>
+
+    </div>
+    <div class="auth-footer-txt">LinguiVance v1.0 — SenseLab © 2026</div>
+  </div>
+</div>
+
+<!-- ══ LEVEL EXAM PROMPT ══ -->
+<div class="lvl-exam-prompt" id="lvlExamPrompt">
+  <div class="lvl-exam-sheet">
+    <div class="lvl-exam-icon" id="lvlExamPromptIcon">🎓</div>
+    <div class="lvl-exam-title" id="lvlExamPromptTitle">Seviye Tamamlandı!</div>
+    <div class="lvl-exam-sub" id="lvlExamPromptSub">Bir üst seviyeye geçmek için sınava girin. %80 başarı ile bir sonraki seviyeye ilerlersiniz.</div>
+    <button class="lvl-exam-enter-btn" id="lvlExamEnterBtn" onclick="doStartLevelExam()">Sınava Gir 🎯</button>
+    <button class="lvl-exam-later-btn" onclick="closeLevelExamPrompt()">Sonra</button>
+  </div>
+</div>
+
+<!-- ══ CERTIFICATE ══ -->
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-card">
+    <div class="cert-header">
+      <span class="cert-trophy">🏆</span>
+      <div class="cert-title" id="certTitle">A1 Seviye Sertifikası</div>
+      <div class="cert-subtitle">LinguiVance — Başarı Belgesi</div>
+    </div>
+    <div class="cert-body">
+      <div class="cert-name" id="certName">Öğrenci</div>
+      <div class="cert-score-badge" id="certScore"><span>⭐</span> %0 Başarı</div>
+      <div class="cert-date" id="certDate"></div>
+      <div class="cert-next-badge" id="certNextBadge">
+        <span class="cert-next-emoji" id="certNextEmoji">🌿</span>
+        <div>
+          <div class="cert-next-lbl">Bir sonraki seviye</div>
+          <div class="cert-next-name" id="certNextName">A2 — Sapling</div>
+        </div>
+      </div>
+      <button class="cert-btn" onclick="closeCertificate()">Devam Et 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING ══ -->
+<div class="onboard-overlay hidden" id="scrOnboard">
+
+  <!-- Progress dots (2 steps) -->
+  <div class="ob-dots">
+    <div class="ob-dot active" id="obDot0"></div>
+    <div class="ob-dot" id="obDot1"></div>
+  </div>
+
+  <!-- Step 1 — Avatar/Icon -->
+  <div class="ob-step active" id="obStep0">
+    <div class="ob-logo-wrap">
+      <div class="ob-logo-icon">🎓</div>
+      <div class="ob-logo-name">LinguiVance</div>
+      <div class="ob-logo-sub">Phrase &amp; Grammar</div>
+    </div>
+    <div class="ob-title">Hoş Geldin! 👋</div>
+    <div class="ob-sub">Seni temsil edecek bir ikon seç 🎨</div>
+    <div class="ob-emoji-grid" id="obEmojiGrid"></div>
+    <button class="ob-btn" onclick="obNext(0)">
+      Devam Et <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- Step 2 — Study preference -->
+  <div class="ob-step" id="obStep1">
+    <div class="ob-title">Çalışma Hedefin</div>
+    <div class="ob-sub">Odaklanmak istediğin alanı seç 🎯</div>
+    <div class="ob-choice-grid" id="obChoiceGrid"></div>
+    <button class="ob-btn ob-finish" onclick="obFinish()">
+      Başla! 🚀
+    </button>
+    <button class="ob-back-btn" onclick="obBack(1)">
+      <i class="fa-solid fa-arrow-left"></i> Geri
+    </button>
+  </div>
+
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">LinguiVance</div>
+  <div class="loading-spinner"></div>
+  <div style="font-size:.8rem;color:var(--muted)">Veriler yükleniyor…</div>
+</div>
+
+<!-- Toast -->
+<div class="notify" id="notify"></div>
+
+<div class="app">
+
+  <!-- ══ HOME ══ -->
+  <div id="scrHome" class="screen active">
+    <div class="top-bar">
+      <div class="logo-area">
+        <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div>
+          <div class="logo-main">LinguiVance</div>
+          <div class="logo-sub">Phrase &amp; Grammar</div>
+        </div>
+      </div>
+      <div class="top-bar-actions">
+        <div class="lang-toggle" id="langToggle">
+          <button class="lang-btn active" onclick="setLang('EN',this)">EN</button>
+          <button class="lang-btn" onclick="setLang('TR',this)">TR</button>
+        </div>
+        <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
+      </div>
     </div>
 
-    <div id="scrSetts" class="screen">
-        <div class="top-bar"><i class="fa-solid fa-chevron-left" onclick="nav('scrMain')"></i><b>YEDEK YÜKLE</b><div></div></div>
-        <div class="content-scroll">
-            <div class="lvl-card" onclick="document.getElementById('impG').click()" style="cursor:pointer">
-                <div style="background:#6200EE; color:white; padding:15px; border-radius:12px;"><i class="fa-solid fa-file-import"></i></div>
-                <div style="flex:1"><b>Grammar Yükle (12'li)</b><br><small id="statusG">Bekleniyor...</small></div>
-                <input type="file" id="impG" hidden onchange="smartImport(event, 'grammar')">
-            </div>
-            <div class="lvl-card" onclick="document.getElementById('impP').click()" style="cursor:pointer">
-                <div style="background:#FF9900; color:white; padding:15px; border-radius:12px;"><i class="fa-solid fa-file-import"></i></div>
-                <div style="flex:1"><b>Phrase Yükle (7'li)</b><br><small id="statusP">Bekleniyor...</small></div>
-                <input type="file" id="impP" hidden onchange="smartImport(event, 'phrase')">
-            </div>
-        </div>
+    <div class="hero-card">
+      <span class="hero-emoji" id="heroEmoji">🔥</span>
+      <div class="hero-streak" id="heroStreak">0 Günlük Seri</div>
+      <div class="hero-quote" id="heroQuote">Bugün çalışmaya başla!</div>
+      <div class="week-row" id="weekRow"></div>
     </div>
 
-    <div id="scrGame" class="screen">
-        <div class="top-bar"><i class="fa-solid fa-xmark" onclick="nav('scrSets')"></i><b id="gInfo">SET 1</b><i class="fa-solid fa-volume-high" style="font-size:22px; color:var(--primary)" onclick="speak()"></i></div>
-        <div class="card-zone">
-            <div class="card-3d" id="card" onclick="this.classList.toggle('flipped')">
-                <div class="face"><div id="qTxt" style="font-size:24px; font-weight:800;">Question</div></div>
-                <div class="face face-back">
-                    <div id="aTxt" style="font-size:22px; font-weight:700; color:var(--primary);">Answer</div>
-                    <div id="tTxt" class="tense-info">Tense</div>
-                </div>
-            </div>
-        </div>
-        <div class="btn-row">
-            <button class="btn-circle" style="background:#FF5E57" onclick="step(false)"><i class="fa-solid fa-xmark"></i></button>
-            <button class="btn-circle" style="background:#05C46B" onclick="step(true)"><i class="fa-solid fa-check"></i></button>
-        </div>
+    <div class="daily-goals">
+      <div class="goals-header">
+        <div class="goals-title">Günlük Hedefler</div>
+      </div>
+      <div class="goals-grid" id="goalsGrid"></div>
     </div>
 
-    <div id="scrMod" class="screen"><div class="top-bar"><i class="fa-solid fa-chevron-left" onclick="nav('scrMain')"></i><b id="mTitle"></b><div></div></div><div class="content-scroll" id="lList"></div></div>
-    <div id="scrSets" class="screen"><div class="top-bar"><i class="fa-solid fa-chevron-left" onclick="nav('scrMod')"></i><b id="sTitle">SETLER</b><div></div></div><div class="content-scroll" id="setList"></div></div>
+    <div class="feature-btns">
+      <div class="feature-btn fb-grammar" onclick="goLevels('grammar')">
+        <div class="feature-btn-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="feature-btn-lbl">Gramer</span>
+        <i class="fa-solid fa-chevron-right feature-btn-arr"></i>
+      </div>
+      <div class="feature-btn fb-phrase" onclick="goLevels('phrase')">
+        <div class="feature-btn-icon"><i class="fa-solid fa-comments"></i></div>
+        <span class="feature-btn-lbl">Kalıplar</span>
+        <i class="fa-solid fa-chevron-right feature-btn-arr"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEVELS ══ -->
+  <div id="scrLevels" class="screen">
+    <div class="top-bar">
+      <button class="back-nav" id="levelsBackBtn"><i class="fa-solid fa-chevron-left"></i> Geri</button>
+    </div>
+    <div class="screen-title" id="levelsTitle">Grammar</div>
+    <div class="level-grid" id="levelGrid"></div>
+  </div>
+
+  <!-- ══ SETS ══ -->
+  <div id="scrSets" class="screen">
+    <div class="top-bar">
+      <button class="back-nav" onclick="show('scrLevels')"><i class="fa-solid fa-chevron-left"></i> Geri</button>
+      <div class="game-chip" id="setLvlBadge">A1</div>
+    </div>
+    <div class="screen-title" id="setsTitle">Setler</div>
+    <div id="setList"></div>
+  </div>
+
+  <!-- ══ GAME ══ -->
+  <div id="scrGame" class="screen">
+    <div class="game-header">
+      <button class="back-nav" onclick="exitGame()"><i class="fa-solid fa-xmark"></i> Çık</button>
+      <div class="game-chip" id="gameChip">1 / 12</div>
+      <button class="icon-btn" onclick="speak()"><i class="fa-solid fa-volume-high"></i></button>
+    </div>
+    <div class="card-zone">
+      <div class="card-3d" id="card3d" onclick="this.classList.toggle('flipped')">
+        <div class="card-face">
+          <div class="card-tap-hint">Çevirmek için dokun</div>
+          <div class="card-q" id="cardQ">—</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-a" id="cardA">—</div>
+          <div class="card-tense" id="cardTense" style="display:none">Tense</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="action-btn btn-wrong" onclick="cardStep(false)"><i class="fa-solid fa-xmark"></i></button>
+      <button class="action-btn btn-right" onclick="cardStep(true)"><i class="fa-solid fa-check"></i></button>
+    </div>
+  </div>
+
+  <!-- ══ EXAMS ══ -->
+  <div id="scrExams" class="screen">
+    <div class="top-bar">
+      <button class="back-nav" onclick="show('scrHome')"><i class="fa-solid fa-chevron-left"></i> Geri</button>
+    </div>
+    <div class="screen-title">Sınavlar</div>
+    <div id="examList"></div>
+  </div>
+
+  <!-- ══ QUIZ ══ -->
+  <div id="scrQuiz" class="screen">
+    <div class="quiz-header">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <button class="back-nav" onclick="confirmExitQuiz()"><i class="fa-solid fa-xmark"></i> Çık</button>
+        <div class="game-chip" id="quizChip" style="background:#eff6ff;border-color:#60a5fa;color:#2563eb">1 / 20</div>
+      </div>
+      <div class="quiz-prog-bg">
+        <div class="quiz-prog-fill" id="quizProg" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-num" id="quizNum">SORU 1 / 20</div>
+      <div class="quiz-q" id="quizQ">Soru metni yükleniyor…</div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <button class="quiz-next" id="quizNextBtn" onclick="quizNext()">
+        Sonraki <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ RESULT ══ -->
+  <div id="scrResult" class="screen">
+    <div style="padding:16px 20px 0;flex-shrink:0">
+      <button class="back-nav" onclick="show('scrHome');renderHome()"><i class="fa-solid fa-chevron-left"></i> Ana Sayfa</button>
+    </div>
+    <div class="result-hero">
+      <span class="res-emoji" id="resEmoji">🏆</span>
+      <div class="res-score" id="resScore">%0</div>
+      <div class="res-label" id="resLabel">Harika!</div>
+    </div>
+    <div class="res-stats" id="resStats"></div>
+    <div class="section-label" style="padding-left:20px">Soru Detayları</div>
+    <div style="padding:0 20px 20px" id="resList"></div>
+    <div style="padding:0 20px 30px">
+      <button class="btn-act" onclick="show('scrExams');renderExamList()"><i class="fa-solid fa-list"></i> Sınavlara Dön</button>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE ══ -->
+  <div id="scrProfile" class="screen">
+    <div class="top-bar">
+      <div style="font-size:.68rem;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase">Profil</div>
+      <button class="icon-btn" onclick="toggleDark()"><i class="fa-solid fa-moon"></i></button>
+    </div>
+    <div class="profile-hero">
+      <div class="profile-avatar" id="profAvatar">😊</div>
+      <div class="profile-name" id="profName">Öğrenci</div>
+      <div class="profile-email" id="profEmail"></div>
+      <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px">
+        <div class="profile-level-badge" id="profBadge">🌱 Sprout — A1</div>
+        <div class="admin-chip" id="profAdminChip" style="display:none"><i class="fa-solid fa-shield-halved" style="font-size:.6rem"></i> ADMİN</div>
+      </div>
+    </div>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="section-label" style="margin-top:16px">BAŞARILAR</div>
+    <div class="badge-grid" id="badgeGrid"></div>
+    <div class="section-label">AYARLAR</div>
+    <div class="prof-menu" id="profMenuSettings"></div>
+    <div class="prof-menu" style="margin:10px 20px 0" id="profMenuInfo"></div>
+    <div class="prof-menu" style="margin:10px 20px 0" id="profMenuDanger"></div>
+    <div class="prof-menu" style="margin:10px 20px 20px" id="profMenuLogout"></div>
+    <div class="prof-footer">LinguiVance v1.0 — SenseLab © 2026</div>
+  </div>
+
+  <!-- ══ ADMIN PANEL ══ -->
+  <div id="scrAdmin" class="screen">
+    <div class="admin-header">
+      <div class="admin-header-top">
+        <div>
+          <div style="font-size:.62rem;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">LinguiVance</div>
+          <div class="admin-title">🔒 Admin Paneli</div>
+        </div>
+        <button class="admin-close-btn" onclick="closeAdmin()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="admin-stat-row" id="adminStatRow"></div>
+    </div>
+    <div class="admin-body">
+      <!-- Data Section -->
+      <div class="admin-section">
+        <div class="admin-section-title">Veri Yönetimi</div>
+        <div class="lvl-breakdown" id="adminLvlBreakdown"></div>
+      </div>
+      <!-- Actions Section -->
+      <div class="admin-section">
+        <div class="admin-section-title">İşlemler</div>
+        <div class="admin-card">
+          <div class="admin-row" onclick="adminExportProgress()">
+            <div class="admin-row-icon" style="background:#16a34a"><i class="fa-solid fa-file-export"></i></div>
+            <div>
+              <div class="admin-row-name">İlerleme Yedekle</div>
+              <div class="admin-row-sub">Tüm kullanıcı ilerlemesini JSON olarak indir</div>
+            </div>
+            <i class="fa-solid fa-chevron-right admin-row-arrow"></i>
+          </div>
+          <div class="admin-row" onclick="document.getElementById('adminImportG').click()">
+            <div class="admin-row-icon" style="background:#7c3aed"><i class="fa-solid fa-file-import"></i></div>
+            <div>
+              <div class="admin-row-name">Grammar Güncelle</div>
+              <div class="admin-row-sub" id="adminStatusG">grammer.json yükle</div>
+            </div>
+            <i class="fa-solid fa-chevron-right admin-row-arrow"></i>
+            <input type="file" id="adminImportG" hidden accept=".json" onchange="adminImport(event,'grammar')">
+          </div>
+          <div class="admin-row" onclick="document.getElementById('adminImportP').click()">
+            <div class="admin-row-icon" style="background:#ea580c"><i class="fa-solid fa-file-import"></i></div>
+            <div>
+              <div class="admin-row-name">Phrase Güncelle</div>
+              <div class="admin-row-sub" id="adminStatusP">pharese.json yükle</div>
+            </div>
+            <i class="fa-solid fa-chevron-right admin-row-arrow"></i>
+            <input type="file" id="adminImportP" hidden accept=".json" onchange="adminImport(event,'phrase')">
+          </div>
+          <div class="admin-row" onclick="document.getElementById('adminImportE').click()">
+            <div class="admin-row-icon" style="background:#2563eb"><i class="fa-solid fa-file-import"></i></div>
+            <div>
+              <div class="admin-row-name">Sınav Güncelle</div>
+              <div class="admin-row-sub" id="adminStatusE">sinavlar.json yükle</div>
+            </div>
+            <i class="fa-solid fa-chevron-right admin-row-arrow"></i>
+            <input type="file" id="adminImportE" hidden accept=".json" onchange="adminImport(event,'exams')">
+          </div>
+        </div>
+      </div>
+      <!-- Password Section -->
+      <div class="admin-section">
+        <div class="admin-section-title">Admin Şifresi</div>
+        <div class="admin-pw-section">
+          <div class="input-group" style="margin-bottom:10px">
+            <label class="input-label">Mevcut Şifre</label>
+            <input class="input-field" type="password" id="adminPwCurrent" placeholder="Mevcut şifrenizi girin">
+          </div>
+          <div class="input-group" style="margin-bottom:10px">
+            <label class="input-label">Yeni Şifre</label>
+            <input class="input-field" type="password" id="adminPwNew" placeholder="En az 8 karakter">
+          </div>
+          <div class="input-group" style="margin-bottom:14px">
+            <label class="input-label">Yeni Şifre Tekrar</label>
+            <input class="input-field" type="password" id="adminPwConfirm" placeholder="Şifrenizi tekrar girin">
+          </div>
+          <div class="input-error" id="adminPwError"></div>
+          <button class="sheet-btn" onclick="adminChangePw()"><i class="fa-solid fa-key"></i> Şifreyi Güncelle</button>
+        </div>
+      </div>
+      <!-- Danger Zone -->
+      <div class="admin-section">
+        <div class="admin-section-title" style="color:#dc2626">Tehlikeli Alan</div>
+        <div class="admin-card">
+          <div class="admin-row" onclick="adminResetAllUsers()">
+            <div class="admin-row-icon" style="background:#dc2626"><i class="fa-solid fa-users-slash"></i></div>
+            <div>
+              <div class="admin-row-name" style="color:#dc2626">Tüm Kullanıcı Verisini Sil</div>
+              <div class="admin-row-sub">Tüm ilerleme ve istatistikler silinir</div>
+            </div>
+            <i class="fa-solid fa-chevron-right admin-row-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <!-- Version -->
+      <div style="text-align:center;color:var(--muted);font-size:.68rem;padding-bottom:30px">
+        LinguiVance Phrase & Grammar · Admin v1.0<br>
+        <span id="adminUserInfo" style="font-weight:600"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STATS ══ -->
+  <div id="scrStats" class="screen">
+    <div class="top-bar">
+      <div style="font-size:.68rem;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase">İlerleme</div>
+    </div>
+    <div class="hero-card" style="background:linear-gradient(135deg,#1e293b,#334155)">
+      <span class="hero-emoji">📊</span>
+      <div class="hero-streak" id="statsTotalCards">0 Kart</div>
+      <div class="hero-quote">Toplam çalışılan kart sayısı</div>
+    </div>
+    <div class="stats-sum-grid" id="statsGrid"></div>
+    <div class="section-label">Grammar İlerlemesi</div>
+    <div id="statsGrammar"></div>
+    <div class="section-label">Phrase İlerlemesi</div>
+    <div id="statsPhrase"></div>
+    <div class="section-label">Sınav Geçmişi</div>
+    <div id="statsQuizHistory" style="padding-bottom:10px"></div>
+  </div>
+
+  <!-- ══ TAB BAR ══ -->
+  <nav class="tab-bar" id="tabBar">
+    <button class="tab-item active" data-screen="scrHome" onclick="tabTo('scrHome',this)">
+      <i class="fa-solid fa-house"></i>Ana Sayfa
+    </button>
+    <button class="tab-item" data-screen="scrLevels_grammar" onclick="tabTo('grammar',this)">
+      <i class="fa-solid fa-book-open"></i>Gramer
+    </button>
+    <button class="tab-item" data-screen="scrLevels_phrase" onclick="tabTo('phrase',this)">
+      <i class="fa-solid fa-comments"></i>Kalıplar
+    </button>
+    <button class="tab-item" data-screen="scrStats" onclick="tabTo('scrStats',this)">
+      <i class="fa-solid fa-chart-bar"></i>İlerleme
+    </button>
+    <button class="tab-item" data-screen="scrProfile" onclick="tabTo('scrProfile',this)">
+      <i class="fa-solid fa-user"></i>Profil
+    </button>
+  </nav>
+
+</div><!-- /.app -->
+
+<!-- ══ LOGIN BOTTOM SHEET ══ -->
+<div class="modal-overlay" id="loginOverlay" onclick="if(event.target===this)closeLogin()">
+  <div class="login-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Admin Girişi</div>
+    <div class="sheet-sub">Admin yetkilerine erişmek için giriş yapın.</div>
+    <div class="input-group">
+      <label class="input-label">Kullanıcı Adı</label>
+      <input class="input-field" type="text" id="loginUsername" placeholder="Kullanıcı adı" autocomplete="username">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Şifre</label>
+      <input class="input-field" type="password" id="loginPassword" placeholder="Şifre"
+             autocomplete="current-password" onkeydown="if(event.key==='Enter')doLoginClick()">
+    </div>
+    <div class="input-error" id="loginError"></div>
+    <button class="sheet-btn" onclick="doLoginClick()">
+      <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+    </button>
+    <button class="sheet-btn sheet-btn-sec" onclick="closeLogin()">
+      <i class="fa-solid fa-xmark"></i> İptal
+    </button>
+  </div>
 </div>
 
 <script>
-    let DATA = { mode:'grammar', lvl:'A1', progress:{grammar:{},phrase:{}}, db:{grammar:null,phrase:null} };
+/* ================================================================
+   CONFIG
+================================================================ */
+const LEVELS_CFG = [
+  {id:'A1', name:'Sprout',   emoji:'🌱', main:'#4ade80', dark:'#16a34a', soft:'#f0fdf4'},
+  {id:'A2', name:'Sapling',  emoji:'🌿', main:'#34d399', dark:'#059669', soft:'#ecfdf5'},
+  {id:'B1', name:'Tree',     emoji:'🌳', main:'#fbbf24', dark:'#d97706', soft:'#fffbeb'},
+  {id:'B2', name:'Forest',   emoji:'🌲', main:'#fb923c', dark:'#ea580c', soft:'#fff7ed'},
+  {id:'C1', name:'Mountain', emoji:'⛰️', main:'#f87171', dark:'#dc2626', soft:'#fef2f2'},
+  {id:'C2', name:'Galaxy',   emoji:'🌌', main:'#a78bfa', dark:'#7c3aed', soft:'#f5f3ff'},
+];
+const LVL = Object.fromEntries(LEVELS_CFG.map(l=>[l.id,l]));
+const EXAM_ICONS = ['🎯','🌱','🌿','🌳','🌲','⛰️'];
 
-    function nav(id){ 
-        document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active-screen')); 
-        document.getElementById(id).classList.add('active-screen');
-        if(id==='scrSetts') updateStatus();
+/* ================================================================
+   DATA
+================================================================ */
+let DB = {grammar:null, phrase:null, exams:null};
+
+/* ================================================================
+   USER STATE
+================================================================ */
+const USER_KEY = 'LV_PG_V2';
+let user = {
+  name:'Öğrenci', avatar:'😊', email:'', lang:'EN', dailyGoal:10,
+  onboarded:false, studyMode:'both',
+  streak:0, lastDate:null,
+  weekDays:[false,false,false,false,false,false,false],
+  darkMode:false,
+  progress:{grammar:{}, phrase:{}},  // {A1:{done:0,total:40}}
+  quizHistory:[],
+  stats:{totalCards:0, correctCards:0, quizCount:0},
+  todayStats:{cards:0, sets:0, grammarSets:0, phraseSets:0, quizzes:0, date:null},
+  levelExams:{}  // {A1:{passed:false, lastAttempt:null, score:null}}
+};
+function saveUser(){ localStorage.setItem(USER_KEY, JSON.stringify(user)); }
+function loadUser(){
+  try{ const r=localStorage.getItem(USER_KEY); if(r) user={...user,...JSON.parse(r)}; } catch(e){}
+}
+
+/* ================================================================
+   SESSION
+================================================================ */
+let S = {mode:'grammar', level:'A1', setIdx:0, cardIdx:0, examIdx:0, quizIdx:0, quizAnswers:[], levelExamLvl:null};
+
+/* ================================================================
+   THEME
+================================================================ */
+function setTheme(lvlId){
+  document.body.dataset.level = lvlId || 'A1';
+}
+
+/* ================================================================
+   NAVIGATION
+================================================================ */
+const FULL_SCREENS = ['scrGame','scrQuiz','scrResult'];
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('tabBar').classList.toggle('hidden', FULL_SCREENS.includes(id));
+  // Android back button support via History API
+  history.pushState({screen: id}, '');
+}
+
+/* Android back button — navigate back to home or exit */
+window.addEventListener('popstate', function(e){
+  // Close legal overlay if open
+  const legal = document.getElementById('legalOverlay');
+  if(legal && legal.classList.contains('show')){ closeLegal(); history.pushState({screen:'scrProfile'},''); return; }
+  // Close any open modal overlays
+  const openModal = document.querySelector('.modal-overlay.show');
+  if(openModal){ openModal.classList.remove('show'); setTimeout(()=>openModal.style.display='none',300); history.pushState({},''); return; }
+  const active = document.querySelector('.screen.active');
+  if(!active || active.id === 'scrHome' || active.id === 'scrAuth'){
+    // Already at root — push state back so next back press doesn't glitch
+    history.pushState({},'');
+    return;
+  }
+  show('scrHome');
+});
+
+function tabTo(target, btn){
+  document.querySelectorAll('.tab-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(target==='grammar'){ goLevels('grammar'); }
+  else if(target==='phrase'){ goLevels('phrase'); }
+  else if(target==='scrStats'){ renderStats(); show('scrStats'); }
+  else if(target==='scrProfile'){ renderProfile(); show('scrProfile'); }
+  else { show(target); }
+}
+
+/* ================================================================
+   HOME
+================================================================ */
+function renderHome(){
+  const s = user.streak;
+  document.getElementById('heroEmoji').textContent  = s===0?'😔':s>=10?'🚀':s>=5?'🔥':'⚡';
+  document.getElementById('heroStreak').textContent = s===0 ? '0 Days Streak' : s + (s===1?' Günlük Seri':' Günlük Seri!');
+  document.getElementById('heroQuote').textContent  = s===0
+    ? '"Start again tomorrow — every champion was once a beginner."'
+    : s>=10 ? 'Müthiş bir azim gösteriyorsun! 🚀'
+    : s>=5  ? 'Harika gidiyorsun, devam et! 💪'
+    : 'Bugün çalışmaya devam et! 🌟';
+
+  const days=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  document.getElementById('weekRow').innerHTML = days.map((d,i)=>`
+    <div class="week-dot">
+      <div class="dot ${user.weekDays[i]?'done':''}">${user.weekDays[i]?'✓':''}</div>
+      <label>${d}</label>
+    </div>`).join('');
+
+  /* Daily goals */
+  const today = new Date().toDateString();
+  if(!user.todayStats || user.todayStats.date !== today){
+    user.todayStats = {cards:0, sets:0, grammarSets:0, phraseSets:0, quizzes:0, date:today};
+  }
+  const gGoal = user.studyMode==='phrase' ? 0 : 3;
+  const pGoal = user.studyMode==='grammar' ? 0 : 3;
+  document.getElementById('goalsGrid').innerHTML=`
+    <div class="goal-card">
+      <span class="goal-val">${user.todayStats.grammarSets||0}/${gGoal||3}</span>
+      <span class="goal-lbl">Gramer Set</span>
+    </div>
+    <div class="goal-card">
+      <span class="goal-val">${user.todayStats.phraseSets||0}/${pGoal||3}</span>
+      <span class="goal-lbl">Kalıp Set</span>
+    </div>`;
+
+  /* Lang toggle visual sync */
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent===(user.lang||'EN'));
+  });
+}
+
+function goLevelDirect(lvlId){
+  const hasG = (DB.grammar?.db?.[lvlId]||[]).length>0;
+  const hasP = (DB.phrase?.db?.[lvlId]||[]).length>0;
+  if(!hasG && !hasP){ notify('Bu seviye için veri bulunamadı.','error'); return; }
+  S.mode = hasG ? 'grammar' : 'phrase';
+  setTheme(lvlId);
+  document.getElementById('levelsTitle').textContent = S.mode==='grammar'?'Grammar':'Phrase';
+  document.getElementById('levelsBackBtn').onclick = ()=>{show('scrHome');};
+  goSets(lvlId);
+}
+
+/* ================================================================
+   LEVELS
+================================================================ */
+function goLevels(mode){
+  S.mode = mode;
+  setTheme('A1');
+  document.getElementById('levelsTitle').textContent = mode==='grammar'?'Grammar':'Phrase';
+  document.getElementById('levelsBackBtn').onclick = ()=>show('scrHome');
+
+  const db = DB[mode];
+  const grid = document.getElementById('levelGrid');
+  grid.innerHTML = '';
+
+  LEVELS_CFG.forEach(lv=>{
+    const sets  = db?.db?.[lv.id] || [];
+    const total = sets.length;
+    const done  = user.progress[mode]?.[lv.id]?.done || 0;
+    const pct   = total ? Math.min(Math.round((done/total)*100),100) : 0;
+    const locked= total===0;
+    grid.innerHTML += `
+    <div class="level-btn ${locked?'locked':''}"
+         style="background:linear-gradient(135deg,${lv.main},${lv.dark})"
+         onclick="${locked?'':'goSets(\''+lv.id+'\')'}" >
+      <span class="lv-emoji">${lv.emoji}</span>
+      <span class="lv-name">${lv.id}</span>
+      <span class="lv-cefr">${lv.name}</span>
+      ${total?`<div class="lv-prog-bar"><div class="lv-prog-fill" style="width:${pct}%"></div></div>
+      <span class="lv-prog-txt">${done}/${total} set</span>`:
+      '<span class="lv-prog-txt">Veri yok</span>'}
+    </div>`;
+  });
+  show('scrLevels');
+}
+
+/* ================================================================
+   SETS
+================================================================ */
+function goSets(lvlId){
+  S.level = lvlId;
+  const lv = LVL[lvlId];
+  setTheme(lvlId);
+  const sets = DB[S.mode]?.db?.[lvlId] || [];
+  if(!sets.length){ notify('Bu seviye için veri bulunamadı.','error'); return; }
+
+  document.getElementById('setLvlBadge').textContent = lvlId;
+  document.getElementById('setsTitle').textContent   = `${lv.emoji} ${lv.name} — Setler`;
+
+  const done = user.progress[S.mode]?.[lvlId]?.done || 0;
+  document.getElementById('setList').innerHTML = sets.map((s,i)=>`
+    <div class="list-card" onclick="startGame(${i})">
+      <div class="list-card-num ${i<done?'done':''}">${i<done?'✓':i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="list-card-title">${s.title||'Set '+(i+1)}</div>
+        <div class="list-card-sub">${s.items.length} kart</div>
+      </div>
+      <i class="fa-solid fa-chevron-right list-card-arrow"></i>
+    </div>`).join('');
+
+  show('scrSets');
+}
+
+/* ================================================================
+   GAME
+================================================================ */
+function startGame(idx){
+  S.setIdx  = idx;
+  S.cardIdx = 0;
+  renderCard();
+  show('scrGame');
+}
+
+function renderCard(){
+  const set  = DB[S.mode].db[S.level][S.setIdx];
+  const item = set.items[S.cardIdx];
+  const total= set.items.length;
+
+  document.getElementById('card3d').classList.remove('flipped');
+  document.getElementById('gameChip').textContent = `${S.cardIdx+1} / ${total}`;
+  document.getElementById('cardQ').textContent = item.eng;
+
+  let tr = item.tr||'', tense='';
+  const m = tr.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  if(m){ tr=m[1].trim(); tense=m[2]; }
+  document.getElementById('cardA').textContent = tr;
+  const tEl = document.getElementById('cardTense');
+  tEl.textContent = tense;
+  tEl.style.display = tense ? 'inline-block' : 'none';
+}
+
+function cardStep(ok){
+  user.stats.totalCards++;
+  if(ok) user.stats.correctCards++;
+
+  /* Daily tracking */
+  const today = new Date().toDateString();
+  if(!user.todayStats || user.todayStats.date !== today)
+    user.todayStats = {cards:0, sets:0, grammarSets:0, phraseSets:0, quizzes:0, date:today};
+  user.todayStats.cards++;
+
+  S.cardIdx++;
+  const set = DB[S.mode].db[S.level][S.setIdx];
+
+  if(S.cardIdx >= set.items.length){
+    // Set completed — update progress
+    if(!user.progress[S.mode][S.level])
+      user.progress[S.mode][S.level] = {done:0, total:DB[S.mode].db[S.level].length};
+    user.progress[S.mode][S.level].done =
+      Math.max(user.progress[S.mode][S.level].done, S.setIdx+1);
+    user.todayStats.sets++;
+    if(S.mode==='grammar') user.todayStats.grammarSets=(user.todayStats.grammarSets||0)+1;
+    else user.todayStats.phraseSets=(user.todayStats.phraseSets||0)+1;
+    updateStreak();
+    saveUser();
+    notify('Set tamamlandı! Tebrikler 🎉','success');
+    const completedLevel = S.level;
+    goSets(S.level);
+    /* Check if entire level is now complete → trigger level exam */
+    setTimeout(()=>checkLevelComplete(completedLevel), 800);
+    return;
+  }
+  renderCard();
+}
+
+function exitGame(){
+  saveUser();
+  show('scrSets');
+}
+
+function speak(){
+  const txt = document.getElementById('cardQ').textContent;
+  if(!txt||txt==='—') return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang='en-US';
+  speechSynthesis.speak(u);
+}
+
+/* ================================================================
+   EXAMS
+================================================================ */
+function goExams(){ renderExamList(); show('scrExams'); }
+
+function renderExamList(){
+  const list = document.getElementById('examList');
+  if(!DB.exams){ list.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:.9rem">Sınav verisi yüklenemedi.</div>'; return; }
+  list.innerHTML = DB.exams.map((ex,i)=>{
+    const hist = user.quizHistory.filter(h=>h.name===ex.sinav_adi);
+    const best = hist.length ? Math.max(...hist.map(h=>h.score)) : null;
+    return `
+    <div class="exam-card" onclick="startExam(${i})">
+      <div class="exam-card-icon">${EXAM_ICONS[i]||'📝'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="exam-card-name">${ex.sinav_adi}</div>
+        <div class="exam-card-sub">${ex.sorular.length} soru · ${best!==null?'En iyi: %'+best:'Henüz çözülmedi'}</div>
+      </div>
+      ${best!==null?`<div class="exam-score"><div class="exam-score-val">%${best}</div><div class="exam-score-lbl">En İyi</div></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ================================================================
+   QUIZ
+================================================================ */
+function startExam(idx){
+  S.examIdx=idx; S.quizIdx=0; S.quizAnswers=[];
+  renderQuizQ();
+  show('scrQuiz');
+}
+
+function renderQuizQ(){
+  const sorular = DB.exams[S.examIdx].sorular;
+  const q = sorular[S.quizIdx];
+  const total = sorular.length;
+
+  document.getElementById('quizChip').textContent = `${S.quizIdx+1} / ${total}`;
+  document.getElementById('quizNum').textContent  = `SORU ${S.quizIdx+1} / ${total}`;
+  document.getElementById('quizQ').textContent    = q.soru_metni;
+  document.getElementById('quizProg').style.width = `${(S.quizIdx/total)*100}%`;
+  document.getElementById('quizNextBtn').classList.remove('show');
+
+  const opts = document.getElementById('quizOpts');
+  opts.innerHTML='';
+  ['A','B','C','D'].forEach(letter=>{
+    const val = q.secenekler[letter];
+    if(!val) return;
+    const d = document.createElement('div');
+    d.className='quiz-opt';
+    d.innerHTML=`<div class="opt-letter">${letter}</div><span>${val}</span>`;
+    d.onclick=()=>pickAnswer(letter, q.dogru_cevap);
+    opts.appendChild(d);
+  });
+
+  const nb = document.getElementById('quizNextBtn');
+  nb.innerHTML = S.quizIdx < sorular.length-1
+    ? 'Sonraki <i class="fa-solid fa-arrow-right"></i>'
+    : 'Sonuçları Gör <i class="fa-solid fa-flag-checkered"></i>';
+}
+
+function pickAnswer(chosen, correct){
+  document.querySelectorAll('.quiz-opt').forEach(opt=>{
+    opt.classList.add('disabled');
+    opt.onclick=null;
+    const letter = opt.querySelector('.opt-letter').textContent;
+    if(letter===correct) opt.classList.add('correct');
+    if(letter===chosen && chosen!==correct) opt.classList.add('wrong');
+  });
+  S.quizAnswers.push({chosen, correct, ok: chosen===correct, q: DB.exams[S.examIdx].sorular[S.quizIdx]});
+  document.getElementById('quizNextBtn').classList.add('show');
+}
+
+function quizNext(){
+  S.quizIdx++;
+  if(S.quizIdx >= DB.exams[S.examIdx].sorular.length){ showResult(); return; }
+  renderQuizQ();
+}
+
+function confirmExitQuiz(){
+  if(confirm('Sınavdan çıkılsın mı?')) show('scrExams');
+}
+
+/* ================================================================
+   RESULT
+================================================================ */
+function showResult(){
+  const total   = S.quizAnswers.length;
+  const correct = S.quizAnswers.filter(a=>a.ok).length;
+  const wrong   = total-correct;
+  const score   = Math.round((correct/total)*100);
+  const examName= DB.exams[S.examIdx]?.sinav_adi || (S.levelExamLvl ? S.levelExamLvl+' Seviye Sınavı' : 'Sınav');
+
+  user.quizHistory.push({name:examName, score, correct, total, date:new Date().toLocaleDateString('tr-TR')});
+  user.stats.quizCount++;
+  const today2 = new Date().toDateString();
+  if(!user.todayStats || user.todayStats.date !== today2)
+    user.todayStats = {cards:0, sets:0, quizzes:0, date:today2};
+  user.todayStats.quizzes++;
+  updateStreak();
+
+  /* Handle level exam result */
+  if(S.levelExamLvl){
+    const lvlId = S.levelExamLvl;
+    S.levelExamLvl = null;
+    if(!user.levelExams) user.levelExams={};
+    if(!user.levelExams[lvlId]) user.levelExams[lvlId]={passed:false,lastAttempt:null,score:null};
+    user.levelExams[lvlId].score = score;
+    if(score>=80){
+      user.levelExams[lvlId].passed = true;
+      saveUser();
+      showCertificate(lvlId, score);
+      return;
     }
+    /* Failed — show regular result with retry-tomorrow message */
+    saveUser();
+    const label = score>=80 ? 'Mükemmel! Seviyeyi geçtiniz!' :
+                  score>=60 ? 'Az kaldı! Yarın tekrar deneyin.' :
+                  'Biraz daha çalışmak gerekiyor. Yarın tekrar deneyin.';
+    const emoji = score>=80 ? '🏆' : score>=60 ? '🌟' : '📖';
+    document.getElementById('resEmoji').textContent = emoji;
+    document.getElementById('resScore').textContent = `%${score}`;
+    document.getElementById('resLabel').textContent = label;
+    document.getElementById('resStats').innerHTML=`
+      <div class="res-stat"><div class="res-stat-val" style="color:#16a34a">${correct}</div><div class="res-stat-lbl">Doğru</div></div>
+      <div class="res-stat"><div class="res-stat-val" style="color:#dc2626">${wrong}</div><div class="res-stat-lbl">Yanlış</div></div>
+      <div class="res-stat"><div class="res-stat-val" style="color:#2563eb">${score}%</div><div class="res-stat-lbl">Puan</div></div>
+      <div class="res-stat" style="grid-column:1/-1"><div class="res-stat-val" style="color:#f59e0b;font-size:1rem">%80 geçme notu</div><div class="res-stat-lbl">Bir sonraki sınav yarın</div></div>`;
+    document.getElementById('resList').innerHTML = S.quizAnswers.map(a=>`
+      <div class="detail-item">
+        <div class="detail-icon">${a.ok?'✅':'❌'}</div>
+        <div>
+          <div>${a.q.soru_metni}</div>
+          ${!a.ok?`<div class="detail-hint">✓ Doğru: ${a.q.secenekler[a.correct]} (${a.correct})</div>`:''}
+        </div>
+      </div>`).join('');
+    show('scrResult');
+    return;
+  }
 
-    function updateStatus() {
-        document.getElementById('statusG').innerText = (DATA.db.grammar) ? "✅ Yüklendi" : "❌ Yüklenmedi";
-        document.getElementById('statusP').innerText = (DATA.db.phrase) ? "✅ Yüklendi" : "❌ Yüklenmedi";
-    }
+  saveUser();
 
-    function smartImport(e, type) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            try {
-                const raw = JSON.parse(ev.target.result);
-                DATA.db[type] = raw.db ? raw : { db: raw };
-                save(); alert("Başarıyla yüklendi!"); location.reload();
-            } catch(err) { alert("Dosya hatası!"); }
-        }; reader.readAsText(e.target.files[0]);
-    }
+  const emoji = score>=90?'🏆':score>=70?'🌟':score>=50?'👍':'📖';
+  const label = score>=90?'Mükemmel! Üstün bir performans!':score>=70?'Harika! Çok iyi gidiyorsun!':score>=50?'İyi iş, biraz daha çalış!':'Tekrar çalışmaya devam et!';
+  document.getElementById('resEmoji').textContent = emoji;
+  document.getElementById('resScore').textContent = `%${score}`;
+  document.getElementById('resLabel').textContent = label;
 
-    function openMod(m){
-        DATA.mode = m; document.getElementById('mTitle').innerText = m.toUpperCase();
-        const list = document.getElementById('lList'); list.innerHTML = '';
-        ['A1','A2','B1','B2','C1','C2'].forEach(l=>{
-            const db = DATA.db[m]; const total = (db && db.db && db.db[l]) ? db.db[l].length : 0;
-            const done = DATA.progress[m][l] || 0; const pct = total ? Math.min(Math.round((done/total)*100),100) : 0;
-            list.innerHTML += `<div class="lvl-card" onclick="openSets('${l}')"><div style="background:var(--${l}); color:white; width:45px; height:45px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800">${l}</div><div style="flex:1"><div style="display:flex; justify-content:space-between"><b>${l} Seviyesi</b><b>%${pct}</b></div><div class="prog-bar-bg"><div class="prog-fill" style="width:${pct}%; background:var(--${l})"></div></div></div></div>`;
-        }); nav('scrMod');
-    }
+  document.getElementById('resStats').innerHTML=`
+    <div class="res-stat"><div class="res-stat-val" style="color:#16a34a">${correct}</div><div class="res-stat-lbl">Doğru</div></div>
+    <div class="res-stat"><div class="res-stat-val" style="color:#dc2626">${wrong}</div><div class="res-stat-lbl">Yanlış</div></div>
+    <div class="res-stat"><div class="res-stat-val" style="color:#2563eb">${score}%</div><div class="res-stat-lbl">Puan</div></div>`;
 
-    function openSets(l){
-        DATA.lvl = l; const db = DATA.db[DATA.mode]; if(!db || !db.db[l]) return alert("Veri yüklenmemiş!");
-        const list = document.getElementById('setList'); list.innerHTML = '';
-        db.db[l].forEach((s,i)=>{ list.innerHTML += `<div class="lvl-card" onclick="startPlay(${i})"><b>${s.title}</b></div>`; });
-        nav('scrSets');
-    }
+  document.getElementById('resList').innerHTML = S.quizAnswers.map(a=>`
+    <div class="detail-item">
+      <div class="detail-icon">${a.ok?'✅':'❌'}</div>
+      <div>
+        <div>${a.q.soru_metni}</div>
+        ${!a.ok?`<div class="detail-hint">✓ Doğru: ${a.q.secenekler[a.correct]} (${a.correct})</div>`:''}
+      </div>
+    </div>`).join('');
 
-    let cS=0, cC=0;
-    function startPlay(i){ cS=i; cC=0; render(); nav('scrGame'); }
+  show('scrResult');
+}
 
-    function render(){
-        const item = DATA.db[DATA.mode].db[DATA.lvl][cS].items[cC];
-        document.getElementById('card').classList.remove('flipped');
-        document.getElementById('qTxt').innerText = item.eng;
-        
-        let tr = item.tr, tense = "";
-        if(tr.includes("(") && tr.includes(")")) {
-            tense = tr.substring(tr.indexOf("(")+1, tr.indexOf(")"));
-            tr = tr.substring(0, tr.indexOf("(")).trim();
-        }
-        document.getElementById('aTxt').innerText = tr;
-        document.getElementById('tTxt').innerText = tense || "Genel Kalıp";
-        document.getElementById('tTxt').style.display = tense ? "block" : "none";
-        document.getElementById('gInfo').innerText = "SET " + (cS+1) + " (" + (cC+1) + "/" + DATA.db[DATA.mode].db[DATA.lvl][cS].items.length + ")";
-    }
+/* ================================================================
+   PROFILE
+================================================================ */
+function renderProfile(){
+  const session = getAuthSession();
 
-    function step(win){
-        cC++; if(cC >= DATA.db[DATA.mode].db[DATA.lvl][cS].items.length){
-            DATA.progress[DATA.mode][DATA.lvl] = (DATA.progress[DATA.mode][DATA.lvl]||0)+1;
-            save(); alert("Tebrikler, Set bitti!"); openMod(DATA.mode); return;
-        } render();
-    }
+  /* Avatar & name */
+  document.getElementById('profAvatar').textContent = user.avatar||'😊';
+  const displayName = session ? session.name.split(' ')[0] : (user.name||'Öğrenci');
+  document.getElementById('profName').textContent = displayName;
+  const displayEmail = session ? session.email : (user.email||'');
+  document.getElementById('profEmail').textContent = displayEmail;
 
-    function speak(){ const u = new SpeechSynthesisUtterance(document.getElementById('qTxt').innerText); u.lang='en-US'; speechSynthesis.speak(u); }
-    function save(){ localStorage.setItem('MASTER_V19_4_LOCKED', JSON.stringify(DATA)); }
-    function load(){ 
-        const local = localStorage.getItem('MASTER_V19_4_LOCKED'); if(local) DATA = JSON.parse(local);
-        const g = document.getElementById('stGrid'); const d = ['Pz','Sa','Çr','Pr','Cu','Ct','Pz'];
-        g.innerHTML = ''; d.forEach((day, i) => { g.innerHTML += `<div class="day-dot ${i<4?'active':''}">${day}</div>`; });
-        updateStatus();
-    }
-    load();
+  /* Admin chip */
+  const chip = document.getElementById('profAdminChip');
+  if(chip) chip.style.display = (session?.isAdmin||session?.isSuperAdmin) ? 'inline-flex' : 'none';
+
+  /* Level badge */
+  const totG = Object.values(user.progress.grammar||{}).reduce((a,b)=>a+(b.done||0),0);
+  const totP = Object.values(user.progress.phrase ||{}).reduce((a,b)=>a+(b.done||0),0);
+  const tot  = totG+totP;
+  const lv   = LEVELS_CFG[Math.min(Math.floor(tot/30),5)];
+  document.getElementById('profBadge').innerHTML=`${lv.emoji} ${lv.name} — ${lv.id}`;
+
+  /* Stats grid (dark) */
+  const qAvg = user.quizHistory.length
+    ? Math.round(user.quizHistory.reduce((a,h)=>a+h.score,0)/user.quizHistory.length) : 0;
+  document.getElementById('statGrid').innerHTML=`
+    <div class="stat-tile" style="--tile-color:#4ade80">
+      <span class="stat-icon">📖</span><span class="stat-val">${user.stats.totalCards||0}</span><span class="stat-lbl">Kelime</span>
+    </div>
+    <div class="stat-tile" style="--tile-color:#60a5fa">
+      <span class="stat-icon">📚</span><span class="stat-val">${tot}</span><span class="stat-lbl">Metin</span>
+    </div>
+    <div class="stat-tile" style="--tile-color:#fbbf24">
+      <span class="stat-icon">🔥</span><span class="stat-val">${user.streak}</span><span class="stat-lbl">Streak</span>
+    </div>
+    <div class="stat-tile" style="--tile-color:#a78bfa">
+      <span class="stat-icon">📝</span><span class="stat-val">${qAvg?qAvg+'%':'—'}</span><span class="stat-lbl">Quiz</span>
+    </div>`;
+
+  /* Başarılar (10 badges) */
+  const hasCert = Object.values(user.levelExams||{}).some(e=>e.passed);
+  const badges=[
+    {e:'🔤',n:'İlk Set',      ok:tot>=1},
+    {e:'📖',n:'10 Set',       ok:tot>=10},
+    {e:'📚',n:'50 Set',       ok:tot>=50},
+    {e:'🏆',n:'100 Set',      ok:tot>=100},
+    {e:'✅',n:'İlk Quiz',     ok:(user.stats.quizCount||0)>=1},
+    {e:'⭐',n:'Mükemmel',     ok:user.quizHistory.some(h=>h.score===100)},
+    {e:'🔥',n:'3 Gün Serisi', ok:user.streak>=3},
+    {e:'💪',n:'7 Gün Serisi', ok:user.streak>=7},
+    {e:'🏅',n:'1 Ay Serisi',  ok:user.streak>=30},
+    {e:'📜',n:'İlk Sertifika',ok:hasCert},
+  ];
+  document.getElementById('badgeGrid').innerHTML=badges.map(b=>`
+    <div class="badge-item ${b.ok?'earned':'locked'}">
+      <span class="badge-emoji">${b.e}</span>
+      <span class="badge-name">${b.n}</span>
+    </div>`).join('');
+
+  /* Settings menu */
+  const isDark = user.darkMode;
+  const veriItem = (session?.isAdmin||session?.isSuperAdmin)
+    ? `<div class="menu-item" onclick="openAdmin()">
+         <div class="menu-icon" style="background:#fef9c3;color:#ca8a04"><i class="fa-solid fa-folder-open"></i></div>
+         <span>Veri Yönetimi</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+       </div>`
+    : `<div class="menu-item" onclick="openLogin()">
+         <div class="menu-icon" style="background:#fef9c3;color:#ca8a04"><i class="fa-solid fa-folder-open"></i></div>
+         <span>Veri Yönetimi</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+       </div>`;
+
+  document.getElementById('profMenuSettings').innerHTML=`
+    ${veriItem}
+    <div class="menu-item" onclick="editName()">
+      <div class="menu-icon" style="background:#f0fdf4;color:#16a34a"><i class="fa-solid fa-user-pen"></i></div>
+      <span>İsim Düzenle</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+    </div>
+    <div class="menu-item" onclick="notify('Bildirim ayarları yakında!','success')">
+      <div class="menu-icon" style="background:#fff7ed;color:#ea580c"><i class="fa-solid fa-bell"></i></div>
+      <span>Bildirim Ayarları</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+    </div>
+    <div class="menu-item" onclick="toggleDark();renderProfile()">
+      <div class="menu-icon"><i class="fa-solid fa-moon"></i></div>
+      <span>Karanlık Mod</span>
+      <button class="toggle-sw ${isDark?'on':''}" onclick="event.stopPropagation();toggleDark();renderProfile()"></button>
+    </div>
+    <div class="menu-item" onclick="notify('Dil ayarı yakında!','success')">
+      <div class="menu-icon" style="background:#eff6ff;color:#2563eb"><i class="fa-solid fa-globe"></i></div>
+      <span>Arayüz Dili</span><span class="menu-val">${user.lang||'EN'}</span>
+    </div>
+    <div class="menu-item" onclick="setDailyGoal()">
+      <div class="menu-icon" style="background:var(--lvl-soft);color:var(--lvl-dark)"><i class="fa-solid fa-bullseye"></i></div>
+      <span>Günlük Hedef</span><span class="menu-val">${user.dailyGoal||10} kelime</span>
+    </div>`;
+
+  /* Info menu */
+  document.getElementById('profMenuInfo').innerHTML=`
+    <div class="menu-item" onclick="notify('LinguiVance v1.0 — SenseLab © 2026','success')">
+      <div class="menu-icon" style="background:#eff6ff;color:#2563eb"><i class="fa-solid fa-circle-info"></i></div>
+      <span>Hakkında</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+    </div>
+    <div class="menu-item" onclick="openLegal('privacy')">
+      <div class="menu-icon" style="background:#f5f3ff;color:#7c3aed"><i class="fa-solid fa-shield-halved"></i></div>
+      <span>Gizlilik Politikası</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+    </div>
+    <div class="menu-item" onclick="openLegal('terms')">
+      <div class="menu-icon" style="background:#fefce8;color:#ca8a04"><i class="fa-solid fa-file-contract"></i></div>
+      <span>Kullanım Koşulları</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+    </div>`;
+
+  /* Danger */
+  document.getElementById('profMenuDanger').innerHTML=`
+    <div class="menu-item danger" onclick="resetAll()">
+      <div class="menu-icon"><i class="fa-solid fa-trash"></i></div>
+      <span>Hesabı / Verileri Sil</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+    </div>`;
+
+  /* Logout */
+  document.getElementById('profMenuLogout').innerHTML= session
+    ? `<div class="menu-item" onclick="doLogout()" style="color:#ea580c">
+         <div class="menu-icon" style="background:#fff7ed;color:#ea580c"><i class="fa-solid fa-right-from-bracket"></i></div>
+         <span>Çıkış Yap</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+       </div>`
+    : `<div class="menu-item" onclick="notify('Hesap girişi için Veri Yönetimi\'ne dokunun.','success')" style="color:#94a3b8">
+         <div class="menu-icon" style="background:#f8fafc;color:#94a3b8"><i class="fa-solid fa-right-from-bracket"></i></div>
+         <span>Çıkış Yap</span><i class="fa-solid fa-chevron-right menu-chevron"></i>
+       </div>`;
+}
+
+function editName(){
+  const n=prompt('İsminizi girin:',user.name);
+  if(n?.trim()){ user.name=n.trim(); saveUser(); renderProfile(); }
+}
+function resetProgress(){
+  if(!confirm('Tüm ilerleme sıfırlansın mı?')) return;
+  user.progress={grammar:{},phrase:{}}; user.stats={totalCards:0,correctCards:0,quizCount:0}; user.quizHistory=[];
+  user.todayStats={cards:0,sets:0,quizzes:0,date:null};
+  saveUser(); renderProfile(); notify('İlerleme sıfırlandı.','success');
+}
+function resetAll(){
+  if(!confirm('TÜM VERİ silinsin mi? Bu işlem geri alınamaz!')) return;
+  localStorage.removeItem(USER_KEY); location.reload();
+}
+function setLang(lang, btn){
+  user.lang=lang; saveUser();
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  notify('Dil: '+lang,'success');
+}
+function setDailyGoal(){
+  const n=prompt(`Günlük kelime hedefi (mevcut: ${user.dailyGoal||10}):`, user.dailyGoal||10);
+  if(n && !isNaN(parseInt(n)) && parseInt(n)>0){
+    user.dailyGoal=parseInt(n); saveUser(); renderProfile();
+    notify(`Hedef: ${user.dailyGoal} kelime`,'success');
+  }
+}
+
+/* ================================================================
+   STATISTICS SCREEN
+================================================================ */
+function renderStats(){
+  const totCards = user.stats.totalCards||0;
+  document.getElementById('statsTotalCards').textContent = totCards + (totCards===1?' Kart':' Kart');
+
+  const totG = Object.values(user.progress.grammar||{}).reduce((a,b)=>a+(b.done||0),0);
+  const totP = Object.values(user.progress.phrase ||{}).reduce((a,b)=>a+(b.done||0),0);
+  const qAvg = user.quizHistory.length
+    ? Math.round(user.quizHistory.reduce((a,h)=>a+h.score,0)/user.quizHistory.length) : 0;
+
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stats-sum-card" style="--card-color:#4ade80">
+      <span class="stats-sum-icon">📚</span>
+      <span class="stats-sum-val">${totG}</span>
+      <span class="stats-sum-lbl">Gramer Set</span>
+    </div>
+    <div class="stats-sum-card" style="--card-color:#fb923c">
+      <span class="stats-sum-icon">💬</span>
+      <span class="stats-sum-val">${totP}</span>
+      <span class="stats-sum-lbl">Kalıp Set</span>
+    </div>
+    <div class="stats-sum-card" style="--card-color:#fbbf24">
+      <span class="stats-sum-icon">🔥</span>
+      <span class="stats-sum-val">${user.streak}</span>
+      <span class="stats-sum-lbl">Günlük Seri</span>
+    </div>
+    <div class="stats-sum-card" style="--card-color:#a78bfa">
+      <span class="stats-sum-icon">⭐</span>
+      <span class="stats-sum-val">${qAvg?qAvg+'%':'—'}</span>
+      <span class="stats-sum-lbl">Quiz Ort.</span>
+    </div>`;
+
+  const lvlColors={'A1':'#4ade80','A2':'#34d399','B1':'#fbbf24','B2':'#fb923c','C1':'#f87171','C2':'#a78bfa'};
+
+  const buildProgressRows = (mode) => LEVELS_CFG.map(lv=>{
+    const total = DB[mode]?.db?.[lv.id]?.length||0;
+    const done  = user.progress[mode]?.[lv.id]?.done||0;
+    const pct   = total ? Math.round((done/total)*100) : 0;
+    return `<div class="stats-lvl-row">
+      <div class="stats-tag" style="background:${lvlColors[lv.id]}">${lv.id}</div>
+      <div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%;background:${lvlColors[lv.id]}"></div></div>
+      <div class="stats-count">${done}/${total}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('statsGrammar').innerHTML=`<div class="stats-prog-card">${buildProgressRows('grammar')}</div>`;
+  document.getElementById('statsPhrase').innerHTML =`<div class="stats-prog-card">${buildProgressRows('phrase')}</div>`;
+
+  const hist = [...user.quizHistory].reverse().slice(0,5);
+  document.getElementById('statsQuizHistory').innerHTML = hist.length
+    ? hist.map(h=>`
+      <div class="quiz-hist-card">
+        <div class="quiz-hist-score" style="color:${h.score>=70?'#16a34a':h.score>=50?'#d97706':'#dc2626'}">${h.score}%</div>
+        <div style="flex:1;min-width:0">
+          <div class="quiz-hist-name">${h.name}</div>
+          <div class="quiz-hist-date">${h.date} · ${h.correct}/${h.total} doğru</div>
+        </div>
+        <div style="font-size:.9rem">${h.score>=90?'🏆':h.score>=70?'🌟':h.score>=50?'👍':'📖'}</div>
+      </div>`).join('')
+    : '<div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">Henüz sınav yapılmadı.</div>';
+}
+
+/* ================================================================
+   STREAK
+================================================================ */
+function updateStreak(){
+  const today=new Date().toDateString();
+  if(user.lastDate===today) return;
+  const yest=new Date(Date.now()-864e5).toDateString();
+  user.streak = user.lastDate===yest ? user.streak+1 : 1;
+  user.lastDate=today;
+  const dow=new Date().getDay();
+  user.weekDays=user.weekDays||[false,false,false,false,false,false,false];
+  user.weekDays[dow]=true;
+}
+
+/* ================================================================
+   DARK MODE
+================================================================ */
+function toggleDark(){
+  user.darkMode=!user.darkMode;
+  document.body.classList.toggle('dark-mode',user.darkMode);
+  saveUser();
+}
+
+/* ================================================================
+   NOTIFY
+================================================================ */
+function notify(msg,type='success'){
+  const el=document.getElementById('notify');
+  el.textContent=msg; el.className=`notify ${type} show`;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+/* ================================================================
+   AUTH SYSTEM
+================================================================ */
+const AUTH_USERS_KEY  = 'lv_pg_auth_users';
+const AUTH_SESSION_KEY= 'lv_pg_auth_session';
+
+async function hashPw(pw){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function getAuthUsers(){ return JSON.parse(localStorage.getItem(AUTH_USERS_KEY)||'[]'); }
+function saveAuthUsers(users){ localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(users)); }
+function getAuthSession(){
+  const sid = localStorage.getItem(AUTH_SESSION_KEY);
+  if(!sid) return null;
+  return getAuthUsers().find(u=>u.id===sid) || null;
+}
+function setAuthSession(id){ localStorage.setItem(AUTH_SESSION_KEY, id); }
+function clearAuthSession(){ localStorage.removeItem(AUTH_SESSION_KEY); }
+
+/* Seed super admin once */
+async function seedSuperAdmin(){
+  const users = getAuthUsers();
+  if(users.find(u=>u.isSuperAdmin)) return;
+  const pw = await hashPw('admin241');
+  users.push({
+    id:'sadmin-mehkutlu', name:'Mehmet Kutlu',
+    email:'mehkutlu@gmail.com', username:'admin241',
+    pw, isAdmin:true, isSuperAdmin:true,
+    createdAt: new Date().toISOString()
+  });
+  saveAuthUsers(users);
+}
+
+/* Login */
+async function doLogin(usernameOrEmail, password){
+  const users = getAuthUsers();
+  const u = users.find(u=>u.username===usernameOrEmail || u.email===usernameOrEmail);
+  if(!u) return {ok:false, msg:'Kullanıcı bulunamadı.'};
+  const hashed = await hashPw(password);
+  if(u.pw!==hashed) return {ok:false, msg:'Yanlış şifre.'};
+  setAuthSession(u.id);
+  return {ok:true, user:u};
+}
+
+/* UI helpers */
+function openLogin(){
+  document.getElementById('loginUsername').value='';
+  document.getElementById('loginPassword').value='';
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('loginOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('loginUsername').focus(),300);
+}
+function closeLogin(){ document.getElementById('loginOverlay').classList.remove('show'); }
+
+async function doLoginClick(){
+  const un = document.getElementById('loginUsername').value.trim();
+  const pw = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.classList.remove('show');
+  if(!un||!pw){ errEl.textContent='Tüm alanları doldurun.'; errEl.classList.add('show'); return; }
+  const btn = document.querySelector('#loginOverlay .sheet-btn');
+  btn.textContent='Giriş yapılıyor…'; btn.disabled=true;
+  const res = await doLogin(un, pw);
+  btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Giriş Yap'; btn.disabled=false;
+  if(!res.ok){ errEl.textContent=res.msg; errEl.classList.add('show'); return; }
+  closeLogin();
+  notify(`Hoş geldin, ${res.user.name}! 👋`,'success');
+  renderProfile();
+}
+
+/* ── NEW AUTH SCREEN FUNCTIONS ── */
+let _pendingReset = null;
+
+function showAuth(tab='login'){
+  document.getElementById('scrAuth').classList.remove('hidden');
+  switchAuthTab(tab);
+  /* clear fields */
+  ['authLoginId','authLoginPw','authRegName','authRegEmail','authRegPw','authRegPw2'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  ['authLoginErr','authRegErr'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.classList.remove('show');
+  });
+  hideForgotPanel();
+  setTimeout(()=>{
+    const el=document.getElementById(tab==='login'?'authLoginId':'authRegName');
+    if(el) el.focus();
+  },300);
+}
+
+function switchAuthTab(tab){
+  document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('authTabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('authFormLogin').classList.toggle('active', tab==='login');
+  document.getElementById('authFormRegister').classList.toggle('active', tab==='register');
+  document.getElementById('authForgotPanel').classList.remove('active');
+}
+
+async function doAuthLoginClick(){
+  const un  = document.getElementById('authLoginId').value.trim();
+  const pw  = document.getElementById('authLoginPw').value;
+  const errEl = document.getElementById('authLoginErr');
+  errEl.classList.remove('show');
+  if(!un||!pw){ errEl.textContent='Tüm alanları doldurun.'; errEl.classList.add('show'); return; }
+  const btn = document.querySelector('#authFormLogin .auth-submit-btn');
+  btn.textContent='Giriş yapılıyor…'; btn.disabled=true;
+  const res = await doLogin(un, pw);
+  btn.textContent='Giriş Yap →'; btn.disabled=false;
+  if(!res.ok){ errEl.textContent=res.msg; errEl.classList.add('show'); return; }
+  enterApp(res.user);
+}
+
+async function doAuthRegisterClick(){
+  const name  = document.getElementById('authRegName').value.trim();
+  const email = document.getElementById('authRegEmail').value.trim().toLowerCase();
+  const pw    = document.getElementById('authRegPw').value;
+  const pw2   = document.getElementById('authRegPw2').value;
+  const errEl = document.getElementById('authRegErr');
+  errEl.classList.remove('show');
+  if(!name){ errEl.textContent='Ad Soyad gerekli.'; errEl.classList.add('show'); return; }
+  if(!email||!email.includes('@')){ errEl.textContent='Geçerli bir e-posta girin.'; errEl.classList.add('show'); return; }
+  if(pw.length<6){ errEl.textContent='Şifre en az 6 karakter olmalı.'; errEl.classList.add('show'); return; }
+  if(pw!==pw2){ errEl.textContent='Şifreler eşleşmiyor.'; errEl.classList.add('show'); return; }
+  const existing = getAuthUsers();
+  if(existing.find(u=>u.email===email)){ errEl.textContent='Bu e-posta zaten kayıtlı.'; errEl.classList.add('show'); return; }
+  const btn = document.querySelector('#authFormRegister .auth-submit-btn');
+  btn.textContent='Kayıt yapılıyor…'; btn.disabled=true;
+  const hashed = await hashPw(pw);
+  const newUser = {
+    id:'u_'+Date.now(), name, email,
+    username: email.split('@')[0],
+    pw:hashed, isAdmin:false, isSuperAdmin:false,
+    createdAt: new Date().toISOString()
+  };
+  existing.push(newUser);
+  saveAuthUsers(existing);
+  setAuthSession(newUser.id);
+  /* Bootstrap user state with real name/email */
+  user.name  = name.split(' ')[0];
+  user.email = email;
+  user.onboarded = false;
+  saveUser();
+  btn.textContent='Kayıt Ol →'; btn.disabled=false;
+  enterApp(newUser);
+}
+
+function enterApp(authUser){
+  document.getElementById('scrAuth').classList.add('hidden');
+  /* Sync name/email from auth if not set */
+  if(!user.name || user.name==='Öğrenci') user.name = authUser.name ? authUser.name.split(' ')[0] : 'Öğrenci';
+  if(!user.email) user.email = authUser.email||'';
+  saveUser();
+  if(!user.onboarded){
+    checkOnboard();
+  } else {
+    updateStreak(); saveUser(); renderHome();
+  }
+}
+
+/* ── FORGOT PASSWORD ── */
+function showForgotPanel(){
+  document.getElementById('authFormLogin').classList.remove('active');
+  document.getElementById('authForgotPanel').classList.add('active');
+  document.getElementById('authForgotStep1').style.display='block';
+  document.getElementById('authForgotStep2').style.display='none';
+  document.getElementById('authForgotErr1').classList.remove('show');
+  document.getElementById('authForgotEmail').value='';
+  _pendingReset=null;
+}
+function hideForgotPanel(){
+  document.getElementById('authForgotPanel').classList.remove('active');
+  document.getElementById('authFormLogin').classList.add('active');
+  _pendingReset=null;
+}
+function doForgotStep1(){
+  const email = document.getElementById('authForgotEmail').value.trim().toLowerCase();
+  const errEl = document.getElementById('authForgotErr1');
+  errEl.classList.remove('show');
+  const users = getAuthUsers();
+  const u = users.find(u=>u.email===email);
+  if(!u){ errEl.textContent='Bu e-posta ile kayıtlı hesap bulunamadı.'; errEl.classList.add('show'); return; }
+  const code = String(Math.floor(100000+Math.random()*900000));
+  _pendingReset = {email, code, userId:u.id};
+  document.getElementById('authResetCodeDisplay').textContent = code;
+  document.getElementById('authForgotStep1').style.display='none';
+  document.getElementById('authForgotStep2').style.display='block';
+  document.getElementById('authForgotErr2').classList.remove('show');
+  document.getElementById('authForgotCode').value='';
+  document.getElementById('authNewPw').value='';
+}
+async function doForgotStep2(){
+  const code = document.getElementById('authForgotCode').value.trim();
+  const pw   = document.getElementById('authNewPw').value;
+  const errEl= document.getElementById('authForgotErr2');
+  errEl.classList.remove('show');
+  if(!_pendingReset){ errEl.textContent='Oturum süresi doldu.'; errEl.classList.add('show'); return; }
+  if(code!==_pendingReset.code){ errEl.textContent='Kod yanlış.'; errEl.classList.add('show'); return; }
+  if(pw.length<6){ errEl.textContent='Şifre en az 6 karakter olmalı.'; errEl.classList.add('show'); return; }
+  const users = getAuthUsers();
+  const u = users.find(u=>u.id===_pendingReset.userId);
+  if(!u){ errEl.textContent='Kullanıcı bulunamadı.'; errEl.classList.add('show'); return; }
+  u.pw = await hashPw(pw);
+  saveAuthUsers(users);
+  _pendingReset=null;
+  notify('Şifre güncellendi! Giriş yapabilirsiniz.','success');
+  hideForgotPanel();
+}
+
+function doLogout(){
+  if(!confirm('Oturumu kapat?')) return;
+  clearAuthSession();
+  /* Reset onboarded flag so re-login triggers fresh onboarding check */
+  show('scrHome');
+  showAuth('login');
+  notify('Çıkış yapıldı.','success');
+}
+
+/* ── ADMIN PANEL ── */
+function openAdmin(){
+  const session = getAuthSession();
+  if(!session?.isAdmin && !session?.isSuperAdmin){
+    notify('Admin yetkisi gerekli.','error'); return;
+  }
+  renderAdminPanel(session);
+  document.getElementById('tabBar').classList.add('hidden');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scrAdmin').classList.add('active');
+}
+function closeAdmin(){
+  document.getElementById('tabBar').classList.remove('hidden');
+  show('scrProfile');
+  renderProfile();
+}
+
+function renderAdminPanel(session){
+  /* Stats row */
+  const gTotal = Object.values(DB.grammar?.db||{}).reduce((a,s)=>a+s.length,0);
+  const pTotal = Object.values(DB.phrase?.db ||{}).reduce((a,s)=>a+s.length,0);
+  const eTotal = DB.exams?.length||0;
+  document.getElementById('adminStatRow').innerHTML=`
+    <div class="admin-stat-box"><span class="admin-stat-val">${gTotal}</span><span class="admin-stat-lbl">Grammar Set</span></div>
+    <div class="admin-stat-box"><span class="admin-stat-val">${pTotal}</span><span class="admin-stat-lbl">Phrase Set</span></div>
+    <div class="admin-stat-box"><span class="admin-stat-val">${eTotal}</span><span class="admin-stat-lbl">Sınav</span></div>`;
+
+  /* Level breakdown */
+  const lvlColors={'A1':'#4ade80','A2':'#34d399','B1':'#fbbf24','B2':'#fb923c','C1':'#f87171','C2':'#a78bfa'};
+  const maxSets = Math.max(
+    ...LEVELS_CFG.map(l=>(DB.grammar?.db?.[l.id]?.length||0)+(DB.phrase?.db?.[l.id]?.length||0)), 1
+  );
+  document.getElementById('adminLvlBreakdown').innerHTML = LEVELS_CFG.map(lv=>{
+    const g = DB.grammar?.db?.[lv.id]?.length||0;
+    const p = DB.phrase?.db?.[lv.id]?.length||0;
+    const pct = Math.round(((g+p)/maxSets)*100);
+    return `<div class="lvl-row">
+      <div class="lvl-tag" style="background:${lvlColors[lv.id]}">${lv.id}</div>
+      <div class="lvl-bar-bg"><div class="lvl-bar-fill" style="width:${pct}%;background:${lvlColors[lv.id]}"></div></div>
+      <div class="lvl-count">${g}G · ${p}P</div>
+    </div>`;
+  }).join('');
+
+  /* Status labels */
+  document.getElementById('adminStatusG').textContent = DB.grammar ? `✅ ${gTotal} set yüklü` : '❌ Yüklenmedi';
+  document.getElementById('adminStatusP').textContent = DB.phrase  ? `✅ ${pTotal} set yüklü` : '❌ Yüklenmedi';
+  document.getElementById('adminStatusE').textContent = DB.exams   ? `✅ ${eTotal} sınav yüklü` : '❌ Yüklenmedi';
+
+  /* User info */
+  document.getElementById('adminUserInfo').textContent =
+    `${session.name} · ${session.email} · ${session.isSuperAdmin?'Süper Admin':'Admin'}`;
+
+  /* Clear pw fields */
+  ['adminPwCurrent','adminPwNew','adminPwConfirm'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('adminPwError').classList.remove('show');
+}
+
+function adminExportProgress(){
+  const data = { exportDate: new Date().toISOString(), user, quizHistory: user.quizHistory };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `lv_pg_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  notify('Yedek indirildi!','success');
+}
+
+function adminImport(e, type){
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const raw = JSON.parse(ev.target.result);
+      if(type==='grammar'){ DB.grammar = raw.db ? raw : {db:raw}; }
+      else if(type==='phrase'){ DB.phrase = raw.db ? raw : {db:raw}; }
+      else if(type==='exams'){ DB.exams = Array.isArray(raw) ? raw : raw.exams; }
+      const session = getAuthSession();
+      renderAdminPanel(session);
+      notify('Veri başarıyla güncellendi!','success');
+    } catch(err){ notify('Dosya okunamadı: '+err.message,'error'); }
+  };
+  reader.readAsText(e.target.files[0]);
+}
+
+async function adminChangePw(){
+  const cur  = document.getElementById('adminPwCurrent').value;
+  const nw   = document.getElementById('adminPwNew').value;
+  const conf = document.getElementById('adminPwConfirm').value;
+  const errEl= document.getElementById('adminPwError');
+  errEl.classList.remove('show');
+
+  if(!cur||!nw||!conf){ errEl.textContent='Tüm şifre alanlarını doldurun.'; errEl.classList.add('show'); return; }
+  if(nw.length<8){ errEl.textContent='Yeni şifre en az 8 karakter olmalı.'; errEl.classList.add('show'); return; }
+  if(nw!==conf){ errEl.textContent='Yeni şifreler eşleşmiyor.'; errEl.classList.add('show'); return; }
+
+  const session = getAuthSession();
+  const users   = getAuthUsers();
+  const admin   = users.find(u=>u.id===session.id);
+  const curHash = await hashPw(cur);
+  if(curHash!==admin.pw){ errEl.textContent='Mevcut şifre yanlış.'; errEl.classList.add('show'); return; }
+
+  admin.pw = await hashPw(nw);
+  saveAuthUsers(users);
+  notify('Şifre güncellendi!','success');
+  ['adminPwCurrent','adminPwNew','adminPwConfirm'].forEach(id=>document.getElementById(id).value='');
+}
+
+function adminResetAllUsers(){
+  if(!confirm('TÜM kullanıcı verisi (ilerleme, istatistik) silinsin mi?\nBu işlem geri alınamaz!')) return;
+  if(!confirm('Emin misiniz? Son onay.')) return;
+  localStorage.removeItem(USER_KEY);
+  location.reload();
+}
+
+/* ================================================================
+   ONBOARDING
+================================================================ */
+const OB_EMOJIS = [
+  '😊','😎','🤓','😄','🧑‍🎓','👨‍💻','👩‍💻','🎓',
+  '🦊','🐼','🐸','🦁','🚀','⭐','🎯','🏆',
+  '🌟','💡','🦋','🎵','🏄','🌈','🧩','🔥',
+];
+const OB_CHOICES = [
+  {id:'grammar', icon:'🧠', color:'linear-gradient(135deg,#a78bfa,#7c3aed)', name:'Grammar Odaklı',  sub:'Dilbilgisi, yapı ve zaman kalıpları',   goal:8 },
+  {id:'phrase',  icon:'💬', color:'linear-gradient(135deg,#fb923c,#ea580c)', name:'Kelime Odaklı',   sub:'Günlük kalıplar, ifadeler ve cümleler',  goal:12},
+  {id:'both',    icon:'⚡', color:'linear-gradient(135deg,#4ade80,#16a34a)', name:'Tam Öğrenme',     sub:'Grammar ve Phrase — her ikisi birden',    goal:10},
+];
+
+let OB = { step:0, avatar:'😊', studyMode:'both' };
+
+function initOnboard(){
+  /* Emoji grid */
+  document.getElementById('obEmojiGrid').innerHTML = OB_EMOJIS.map(e=>
+    `<button class="ob-emoji-btn" onclick="obSelectEmoji('${e}')" data-emoji="${e}">${e}</button>`
+  ).join('');
+  obSelectEmoji(user.avatar||'😊');
+
+  /* Study choices */
+  document.getElementById('obChoiceGrid').innerHTML = OB_CHOICES.map(c=>`
+    <div class="ob-choice" id="obC_${c.id}" onclick="obSelectStudy('${c.id}')">
+      <div class="ob-choice-ico" style="background:${c.color}">${c.icon}</div>
+      <div>
+        <div class="ob-choice-name">${c.name}</div>
+        <div class="ob-choice-sub">${c.sub}</div>
+      </div>
+    </div>`).join('');
+  obSelectStudy('both');
+}
+
+function obSelectEmoji(e){
+  OB.avatar = e;
+  document.querySelectorAll('.ob-emoji-btn').forEach(b=>
+    b.classList.toggle('selected', b.dataset.emoji===e));
+}
+function obSelectStudy(id){
+  OB.studyMode = id;
+  document.querySelectorAll('.ob-choice').forEach(c=>
+    c.classList.toggle('selected', c.id==='obC_'+id));
+}
+
+function obGotoStep(s){
+  document.querySelectorAll('.ob-step').forEach((el,i)=>el.classList.toggle('active',i===s));
+  document.querySelectorAll('.ob-dot').forEach((d,i)=>{
+    d.classList.toggle('done', i<s);
+    d.classList.toggle('active', i===s);
+    if(i<s) d.classList.remove('active');
+    if(i>s) d.classList.remove('done','active');
+  });
+  OB.step = s;
+  window.scrollTo(0,0);
+}
+
+/* 2-step onboarding: step0=avatar, step1=study */
+function obNext(from){
+  if(from===0){ obGotoStep(1); }
+}
+function obBack(from){ obGotoStep(from-1); }
+
+function obFinish(){
+  const choice = OB_CHOICES.find(c=>c.id===OB.studyMode);
+  user.avatar    = OB.avatar;
+  user.studyMode = OB.studyMode;
+  user.dailyGoal = choice?.goal || 10;
+  user.onboarded = true;
+  saveUser();
+
+  document.getElementById('scrOnboard').classList.add('hidden');
+  updateStreak();
+  saveUser();
+  renderHome();
+  setTimeout(()=>notify(`Hoş geldin, ${user.name}! Hadi başlayalım 🚀`,'success'), 400);
+}
+
+function checkOnboard(){
+  if(!user.onboarded){
+    /* Pre-fill avatar from existing user data */
+    OB.avatar = user.avatar||'😊';
+    initOnboard();
+    document.getElementById('scrOnboard').classList.remove('hidden');
+    return true;
+  }
+  return false;
+}
+
+/* ================================================================
+   LEVEL EXAM SYSTEM
+================================================================ */
+const LEVEL_EXAM_MAP = {A1:0, A2:1, B1:2, B2:3, C1:4, C2:5};
+let _pendingLevelExamLvl = null; // level ID waiting for exam start
+
+function checkLevelComplete(lvlId){
+  if(!DB.grammar || !DB.phrase) return;
+  const gTotal = DB.grammar?.db?.[lvlId]?.length||0;
+  const pTotal = DB.phrase?.db?.[lvlId]?.length||0;
+  if((gTotal+pTotal)===0) return;
+  const gDone = user.progress.grammar?.[lvlId]?.done||0;
+  const pDone = user.progress.phrase?.[lvlId]?.done||0;
+  if(gDone < gTotal || pDone < pTotal) return; // level not fully done
+  if(!user.levelExams) user.levelExams={};
+  const st = user.levelExams[lvlId];
+  if(st?.passed) return; // already passed
+  const today = new Date().toDateString();
+  if(st?.lastAttempt===today) return; // already attempted today
+  _pendingLevelExamLvl = lvlId;
+  setTimeout(()=>showLevelExamPrompt(lvlId), 1200);
+}
+
+function showLevelExamPrompt(lvlId){
+  const lv = LEVELS_CFG.find(l=>l.id===lvlId);
+  document.getElementById('lvlExamPromptIcon').textContent = lv?.emoji||'🎓';
+  document.getElementById('lvlExamPromptTitle').textContent = `${lvlId} Seviyesini Tamamladınız! 🎉`;
+  document.getElementById('lvlExamPromptSub').textContent =
+    `Tebrikler! ${lv?.name||lvlId} seviyesini bitirdiniz. Seviye sınavına girerek bir üst seviyeye geçebilirsiniz. %80 başarı gereklidir.`;
+  document.getElementById('lvlExamPrompt').classList.add('show');
+}
+
+function closeLevelExamPrompt(){
+  document.getElementById('lvlExamPrompt').classList.remove('show');
+  _pendingLevelExamLvl = null;
+}
+
+function doStartLevelExam(){
+  const lvlId = _pendingLevelExamLvl;
+  if(!lvlId) return;
+  closeLevelExamPrompt();
+  if(!user.levelExams) user.levelExams={};
+  if(!user.levelExams[lvlId]) user.levelExams[lvlId]={passed:false,lastAttempt:null,score:null};
+  user.levelExams[lvlId].lastAttempt = new Date().toDateString();
+  saveUser();
+  /* Use sinavlar.json exam mapped to this level */
+  S.levelExamLvl = lvlId;
+  const examIdx = LEVEL_EXAM_MAP[lvlId] ?? 0;
+  if(!DB.exams || !DB.exams[examIdx]){
+    notify('Sınav verisi bulunamadı.','error');
+    S.levelExamLvl = null;
+    return;
+  }
+  startExam(examIdx);
+}
+
+function showCertificate(lvlId, score){
+  const lv = LEVELS_CFG.find(l=>l.id===lvlId);
+  const lvIdx = LEVELS_CFG.findIndex(l=>l.id===lvlId);
+  const nextLv = LEVELS_CFG[lvIdx+1];
+
+  document.getElementById('certTitle').textContent = `${lvlId} Seviye Sertifikası`;
+  document.getElementById('certName').textContent = user.name||'Öğrenci';
+  document.getElementById('certScore').innerHTML = `<span>⭐</span> %${score} Başarı`;
+  document.getElementById('certDate').textContent = new Date().toLocaleDateString('tr-TR',{year:'numeric',month:'long',day:'numeric'});
+
+  const nextBadge = document.getElementById('certNextBadge');
+  if(nextLv){
+    nextBadge.style.display='flex';
+    nextBadge.style.setProperty('--next-main', nextLv.main);
+    nextBadge.style.setProperty('--next-dark', nextLv.dark);
+    document.getElementById('certNextEmoji').textContent = nextLv.emoji;
+    document.getElementById('certNextName').textContent = `${nextLv.id} — ${nextLv.name}`;
+  } else {
+    nextBadge.style.display='none';
+  }
+  document.getElementById('certOverlay').classList.add('show');
+  /* Show confetti effect */
+  notify(`${lvlId} seviyesini geçtiniz! Tebrikler 🏆`,'success');
+}
+
+function closeCertificate(){
+  document.getElementById('certOverlay').classList.remove('show');
+  show('scrHome');
+  renderHome();
+}
+
+/* ================================================================
+   DATA LOADING
+================================================================ */
+async function loadData(){
+  const tryFetch=async url=>{ const r=await fetch(url); if(!r.ok) throw new Error(r.status); return r.json(); };
+  const results = await Promise.allSettled([
+    tryFetch('./grammer.json'),
+    tryFetch('./pharese.json'),
+    tryFetch('./sinavlar.json'),
+  ]);
+  DB.grammar = results[0].status==='fulfilled' ? results[0].value : null;
+  DB.phrase  = results[1].status==='fulfilled' ? results[1].value : null;
+  DB.exams   = results[2].status==='fulfilled' ? results[2].value : null;
+
+  // Sync progress totals
+  const sync=(mode)=>{
+    const db=DB[mode]; if(!db?.db) return;
+    Object.entries(db.db).forEach(([lvl,sets])=>{
+      if(!user.progress[mode][lvl]) user.progress[mode][lvl]={done:0,total:sets.length};
+      else user.progress[mode][lvl].total=sets.length;
+    });
+  };
+  sync('grammar'); sync('phrase');
+}
+
+/* ================================================================
+   LEGAL MODAL
+================================================================ */
+const LEGAL_TEXTS = {
+  privacy: {
+    title: 'Gizlilik Politikası',
+    content: `Son güncelleme: Mart 2026
+
+LinguiVance uygulamasını kullandığınız için teşekkür ederiz. Bu gizlilik politikası, uygulamamızın kişisel verilerinizi nasıl işlediğini açıklamaktadır.
+
+1. TOPLANAN VERİLER
+
+LinguiVance, tüm verilerinizi yalnızca cihazınızda yerel olarak saklar. Sunucuya herhangi bir kişisel veri gönderilmez.
+
+Cihazınızda saklanan veriler:
+• Adınız ve e-posta adresiniz (kayıt sırasında girdiğiniz)
+• Şifrenizin karma (hash) değeri — düz metin saklanmaz
+• Çalışma ilerlemeniz (tamamlanan setler, seviye durumu)
+• Günlük istatistikleriniz ve çalışma serileri
+• Seçtiğiniz avatar ve tema ayarları
+• Sınav geçmişiniz
+
+2. VERİLERİN KULLANIMI
+
+Toplanan veriler yalnızca:
+• Kişiselleştirilmiş öğrenme deneyimi sunmak
+• İlerlemenizi takip etmek
+• Günlük hedeflerinizi ve sertifikalarınızı yönetmek amacıyla kullanılır.
+
+3. ÜÇÜNCÜ TARAF HİZMETLER
+
+Uygulama aşağıdaki üçüncü taraf hizmetleri kullanır:
+• Google Fonts — yazı tipi yükleme (yazı tipi adı aktarılır)
+• Font Awesome — simge kütüphanesi (CDN üzerinden)
+
+Bu hizmetler kendi gizlilik politikalarına tabidir.
+
+4. VERİ GÜVENLİĞİ
+
+Şifreler asla düz metin olarak saklanmaz; Web Crypto API ile SHA-256 karma algoritması kullanılarak korunur. Tüm veriler cihazınızın yerel depolama alanında (localStorage) tutulur.
+
+5. VERİ SİLME
+
+Uygulama verilerinizi silmek için:
+• Profil > Hesabı Sil seçeneğini kullanabilirsiniz
+• Ya da tarayıcı/uygulama önbelleğini temizleyebilirsiniz
+
+6. ÇOCUKLARIN GİZLİLİĞİ
+
+Uygulama 13 yaş altı kullanıcılara yönelik değildir ve bu yaş grubundan bilerek veri toplanmaz.
+
+7. DEĞİŞİKLİKLER
+
+Bu politika zaman zaman güncellenebilir. Önemli değişiklikler uygulama içinde duyurulacaktır.
+
+8. İLETİŞİM
+
+Gizlilik ile ilgili sorularınız için:
+senselab.dev@gmail.com`
+  },
+  terms: {
+    title: 'Kullanım Koşulları',
+    content: `Son güncelleme: Mart 2026
+
+LinguiVance uygulamasını kullanmadan önce lütfen bu kullanım koşullarını okuyunuz.
+
+1. KABUL
+
+Uygulamayı kullanarak bu koşulları kabul etmiş sayılırsınız.
+
+2. HİZMET TANIMI
+
+LinguiVance, İngilizce dil öğrenimi için kişiselleştirilmiş bir mobil/web uygulamasıdır. Gramer ve kalıp setleri, CEFR seviye bazlı içerik ve ilerleme takibi sunar.
+
+3. KULLANICI SORUMLULUKLARI
+
+Kullanıcılar:
+• Gerçek ve güncel bilgilerle kayıt olmalıdır
+• Hesap güvenliğinden kendileri sorumludur
+• Uygulamayı yalnızca kişisel eğitim amaçlı kullanmalıdır
+• İçerikleri kopyalayıp dağıtmamalıdır
+
+4. FİKRİ MÜLKİYET
+
+Uygulama içeriği, tasarımı ve kod yapısı SenseLab'a aittir. İçeriklerin izinsiz kopyalanması, çoğaltılması veya dağıtılması yasaktır.
+
+5. GARANTİ REDDİ
+
+Uygulama "olduğu gibi" sunulmaktadır. SenseLab, öğrenme çıktıları veya hizmet kesintisizliği konusunda garanti vermez.
+
+6. SORUMLULUK SINIRLAMASI
+
+SenseLab, uygulamanın kullanımından doğabilecek dolaylı zararlardan sorumlu tutulamaz.
+
+7. HİZMET DEĞİŞİKLİKLERİ
+
+SenseLab, önceden bildirmeksizin uygulamayı güncelleme, değiştirme veya sonlandırma hakkını saklı tutar.
+
+8. GEÇERLİ HUKUK
+
+Bu koşullar Türkiye Cumhuriyeti hukukuna tabidir.
+
+9. İLETİŞİM
+
+Sorularınız için:
+senselab.dev@gmail.com
+
+LinguiVance v1.0 — SenseLab © 2026`
+  }
+};
+
+function openLegal(type){
+  const data = LEGAL_TEXTS[type];
+  if(!data) return;
+  document.getElementById('legalTitle').textContent = data.title;
+  document.getElementById('legalContent').textContent = data.content;
+  const overlay = document.getElementById('legalOverlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(()=> overlay.classList.add('show'));
+}
+
+function closeLegal(){
+  const overlay = document.getElementById('legalOverlay');
+  overlay.classList.remove('show');
+  setTimeout(()=>{ overlay.style.display='none'; }, 300);
+}
+
+/* ================================================================
+   INIT
+================================================================ */
+async function init(){
+  loadUser();
+  if(user.darkMode) document.body.classList.add('dark-mode');
+  setTheme('A1');
+
+  try {
+    await Promise.all([loadData(), seedSuperAdmin()]);
+  } catch(err){
+    console.error('[Init] Data load failed:', err);
+    // Show error state with retry button
+    const lo = document.getElementById('loadingOverlay');
+    lo.innerHTML = `
+      <div style="text-align:center;padding:32px;color:#fff">
+        <div style="font-size:3rem;margin-bottom:16px">⚠️</div>
+        <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px">Veriler yüklenemedi</div>
+        <div style="font-size:.85rem;opacity:.8;margin-bottom:24px">İnternet bağlantınızı kontrol edip tekrar deneyin.</div>
+        <button onclick="location.reload()" style="background:#fff;color:#16a34a;border:none;padding:12px 28px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer">Tekrar Dene</button>
+      </div>`;
+    lo.style.display='flex';
+    lo.classList.remove('hidden');
+    return;
+  }
+
+  document.getElementById('loadingOverlay').classList.add('hidden');
+  setTimeout(()=>document.getElementById('loadingOverlay').style.display='none',500);
+
+  // Push initial history state for Android back button
+  history.replaceState({screen:'scrHome'}, '');
+
+  const session = getAuthSession();
+  if(!session){
+    showAuth('login');
+    return;
+  }
+
+  if(!checkOnboard()){
+    updateStreak();
+    saveUser();
+    renderHome();
+  }
+}
+init();
 </script>
 </body>
 </html>

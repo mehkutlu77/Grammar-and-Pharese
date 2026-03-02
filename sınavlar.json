@@ -1,0 +1,752 @@
+[
+  {
+    "sinav_adi": "Seviye Belirleme Sınavı",
+    "sorular": [
+      {
+        "soru_no": 1,
+        "soru_metni": "Hello, what _____ your name?",
+        "secenekler": { "A": "is", "B": "am", "C": "are", "D": "be" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 2,
+        "soru_metni": "I usually _____ breakfast at 8:00 AM every morning.",
+        "secenekler": { "A": "having", "B": "have", "C": "has", "D": "had" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 3,
+        "soru_metni": "My uncle is my father's _____.",
+        "secenekler": { "A": "father", "B": "son", "C": "brother", "D": "cousin" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 4,
+        "soru_metni": "She is _____ than her sister.",
+        "secenekler": { "A": "tall", "B": "tallest", "C": "more tall", "D": "taller" },
+        "dogru_cevap": "D"
+      },
+      {
+        "soru_no": 5,
+        "soru_metni": "Did you _____ to the cinema yesterday?",
+        "secenekler": { "A": "went", "B": "go", "C": "going", "D": "goes" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 6,
+        "soru_metni": "I have lived in this city _____ five years.",
+        "secenekler": { "A": "since", "B": "in", "C": "for", "D": "from" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 7,
+        "soru_metni": "If it rains tomorrow, we _____ at home.",
+        "secenekler": { "A": "will stay", "B": "stayed", "C": "staying", "D": "would stay" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 8,
+        "soru_metni": "The window was _____ by the boys playing football.",
+        "secenekler": { "A": "break", "B": "broke", "C": "breaking", "D": "broken" },
+        "dogru_cevap": "D"
+      },
+      {
+        "soru_no": 9,
+        "soru_metni": "I wish I _____ more time to study for the exam right now.",
+        "secenekler": { "A": "have", "B": "had", "C": "am having", "D": "will have" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 10,
+        "soru_metni": "You _____ have seen him today; he is currently in London.",
+        "secenekler": { "A": "couldn't", "B": "shouldn't", "C": "mustn't", "D": "wouldn't" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 11,
+        "soru_metni": "Despite _____ sick, she went to work.",
+        "secenekler": { "A": "be", "B": "being", "C": "been", "D": "was" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 12,
+        "soru_metni": "We need to _____ the problem before it gets any worse.",
+        "secenekler": { "A": "invent", "B": "ignore", "C": "tackle", "D": "invite" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 13,
+        "soru_metni": "Scarcely _____ the door when the phone started ringing.",
+        "secenekler": { "A": "he had opened", "B": "he opened", "C": "did he open", "D": "had he opened" },
+        "dogru_cevap": "D"
+      },
+      {
+        "soru_no": 14,
+        "soru_metni": "The company is on the _____ of bankruptcy and might close soon.",
+        "secenekler": { "A": "verge", "B": "limit", "C": "border", "D": "edge" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 15,
+        "soru_metni": "It is crucial that he _____ the meeting tomorrow morning.",
+        "secenekler": { "A": "attends", "B": "attended", "C": "attend", "D": "attending" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 16,
+        "soru_metni": "By this time next year, I _____ my university degree.",
+        "secenekler": { "A": "will finish", "B": "will have finished", "C": "finish", "D": "finished" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 17,
+        "soru_metni": "The stock market is very unpredictable; it's highly _____.",
+        "secenekler": { "A": "stable", "B": "constant", "C": "reliable", "D": "volatile" },
+        "dogru_cevap": "D"
+      },
+      {
+        "soru_no": 18,
+        "soru_metni": "His remarks were completely _____, adding no logical value to the discussion.",
+        "secenekler": { "A": "profound", "B": "inane", "C": "astute", "D": "pertinent" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 19,
+        "soru_metni": "The politician tried to _____ the angry crowd by promising immediate reforms.",
+        "secenekler": { "A": "placate", "B": "provoke", "C": "instigate", "D": "alienate" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 20,
+        "soru_metni": "To completely understand this contract, you have to read between the _____.",
+        "secenekler": { "A": "words", "B": "pages", "C": "lines", "D": "sentences" },
+        "dogru_cevap": "C"
+      }
+    ]
+  },
+  {
+    "sinav_adi": "A1 den A2 ye geçiş sınavı",
+    "sorular": [
+      {
+        "soru_no": 1,
+        "soru_metni": "The mixture of gases that we breathe is called _____.",
+        "secenekler": { "A": "water", "B": "air", "C": "earth", "D": "fire" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 2,
+        "soru_metni": "A person who creates art, especially paintings, is an _____.",
+        "secenekler": { "A": "actor", "B": "artist", "C": "boss", "D": "farmer" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 3,
+        "soru_metni": "The season between summer and winter is _____.",
+        "secenekler": { "A": "spring", "B": "autumn", "C": "April", "D": "August" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 4,
+        "soru_metni": "What is Kevin's favorite hobby?",
+        "secenekler": { "A": "Playing football", "B": "Reading books", "C": "Watching movies", "D": "Cooking" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 5,
+        "soru_metni": "A container used for carrying things is a _____.",
+        "secenekler": { "A": "bag", "B": "bell", "C": "ball", "D": "bed" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 6,
+        "soru_metni": "I always wash my hands in the _____.",
+        "secenekler": { "A": "bedroom", "B": "balcony", "C": "bathroom", "D": "living room" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 7,
+        "soru_metni": "A structure built over a river or road is a _____.",
+        "secenekler": { "A": "bridge", "B": "boat", "C": "beach", "D": "bank" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 8,
+        "soru_metni": "The first meal of the day, eaten in the morning, is _____.",
+        "secenekler": { "A": "lunch", "B": "dinner", "C": "breakfast", "D": "dessert" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 9,
+        "soru_metni": "I need to pay the electricity _____.",
+        "secenekler": { "A": "bill", "B": "bell", "C": "book", "D": "boot" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 10,
+        "soru_metni": "\"Can I pay by credit _____?\"",
+        "secenekler": { "A": "cash", "B": "card", "C": "coin", "D": "paper" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 11,
+        "soru_metni": "My brother _____ football every weekend.",
+        "secenekler": { "A": "play", "B": "playing", "C": "plays", "D": "played" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 12,
+        "soru_metni": "We _____ a large family.",
+        "secenekler": { "A": "am", "B": "is", "C": "are", "D": "be" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 13,
+        "soru_metni": "The opposite of 'dirty' is _____.",
+        "secenekler": { "A": "clean", "B": "bad", "C": "short", "D": "slow" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 14,
+        "soru_metni": "What is the color of grass or leaves?",
+        "secenekler": { "A": "Red", "B": "Blue", "C": "Green", "D": "Yellow" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 15,
+        "soru_metni": "The organ used for thinking is the _____.",
+        "secenekler": { "A": "heart", "B": "stomach", "C": "brain", "D": "arm" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 16,
+        "soru_metni": "The child is playing with a red _____.",
+        "secenekler": { "A": "balloon", "B": "sky", "C": "cloud", "D": "tree" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 17,
+        "soru_metni": "\"_____ do you live?\" - \"I live in Istanbul.\"",
+        "secenekler": { "A": "What", "B": "Where", "C": "When", "D": "Who" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 18,
+        "soru_metni": "The day after today is _____.",
+        "secenekler": { "A": "yesterday", "B": "today", "C": "tomorrow", "D": "evening" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 19,
+        "soru_metni": "\"I am very _____ after work. I want to sleep.\"",
+        "secenekler": { "A": "happy", "B": "tired", "C": "loud", "D": "young" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 20,
+        "soru_metni": "_____ name is Sarah. She is a teacher.",
+        "secenekler": { "A": "His", "B": "Her", "C": "My", "D": "Your" },
+        "dogru_cevap": "B"
+      }
+    ]
+  },
+  {
+    "sinav_adi": "A2 den B1 e geçiş sınavı",
+    "sorular": [
+      {
+        "soru_no": 1,
+        "soru_metni": "He has the _____ to speak three languages fluently.",
+        "secenekler": { "A": "ability", "B": "accident", "C": "accommodation", "D": "ache" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 2,
+        "soru_metni": "My brother is studying _____. He lives in Germany now.",
+        "secenekler": { "A": "active", "B": "abroad", "C": "actually", "D": "advance" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 3,
+        "soru_metni": "Where does Ali go first in the airport?",
+        "secenekler": { "A": "Passport control", "B": "Security check", "C": "Check-in counter", "D": "Boarding gate" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 4,
+        "soru_metni": "What does Ali receive after check-in at the airport?",
+        "secenekler": { "A": "A suitcase", "B": "A seat number", "C": "A boarding pass", "D": "A travel guide" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 5,
+        "soru_metni": "Swimming is my favorite _____ in summer.",
+        "secenekler": { "A": "advice", "B": "activity", "C": "accident", "D": "advert" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 6,
+        "soru_metni": "Can you give me some _____ on buying a new car?",
+        "secenekler": { "A": "advice", "B": "active", "C": "ache", "D": "adult" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 7,
+        "soru_metni": "What is the first thing Ali does after waking up?",
+        "secenekler": { "A": "Watches TV", "B": "Eats dinner", "C": "Gets ready for the day", "D": "Goes back to sleep" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 8,
+        "soru_metni": "Why does Ali follow a daily routine?",
+        "secenekler": { "A": "Because his parents say so", "B": "Because it helps him feel organized", "C": "Because school is easy", "D": "Because he has free time" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 9,
+        "soru_metni": "I _____ a new phone yesterday.",
+        "secenekler": { "A": "buy", "B": "bought", "C": "buying", "D": "buys" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 10,
+        "soru_metni": "If it rains tomorrow, we _____ at home.",
+        "secenekler": { "A": "stay", "B": "will stay", "C": "stayed", "D": "staying" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 11,
+        "soru_metni": "Hotel _____ is included in the price of the holiday.",
+        "secenekler": { "A": "accommodation", "B": "admission", "C": "advertisement", "D": "ability" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 12,
+        "soru_metni": "Why does Ali like the metro more than the bus?",
+        "secenekler": { "A": "It is slower", "B": "It is quieter", "C": "It is not affected by traffic", "D": "It is cheaper than walking" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 13,
+        "soru_metni": "What do Ali and his friends do when he feels stressed?",
+        "secenekler": { "A": "Keep silent", "B": "Talk to friends", "C": "Leave school", "D": "Get angry" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 14,
+        "soru_metni": "She is _____ than her sister.",
+        "secenekler": { "A": "tall", "B": "taller", "C": "tallest", "D": "the tallest" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 15,
+        "soru_metni": "They decided to _____ a cat from the animal shelter.",
+        "secenekler": { "A": "achieve", "B": "act", "C": "adopt", "D": "admire" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 16,
+        "soru_metni": "What kind of places does Turkey have according to the reading text?",
+        "secenekler": { "A": "Only mountains", "B": "Only cities", "C": "Different cities and natural places", "D": "Only villages" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 17,
+        "soru_metni": "I saw an _____ for a new job in the newspaper.",
+        "secenekler": { "A": "admission", "B": "advert", "C": "ache", "D": "advance" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 18,
+        "soru_metni": "What does Ali do when he reads bad news?",
+        "secenekler": { "A": "Ignores it", "B": "Gets angry", "C": "Thinks carefully", "D": "Laughs" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 19,
+        "soru_metni": "Have you _____ been to London?",
+        "secenekler": { "A": "ever", "B": "never", "C": "just", "D": "yet" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 20,
+        "soru_metni": "You should stay _____ for your health and do sports.",
+        "secenekler": { "A": "active", "B": "abroad", "C": "ache", "D": "accident" },
+        "dogru_cevap": "A"
+      }
+    ]
+  },
+  {
+    "sinav_adi": "B1 den B2 ye geçiş sınavı",
+    "sorular": [
+      {
+        "soru_no": 1,
+        "soru_metni": "We _____ many problems during the trip, but we solved them all.",
+        "secenekler": { "A": "encountered", "B": "encouraged", "C": "enjoyed", "D": "entered" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 2,
+        "soru_metni": "My teacher _____ me to study harder for the final exams.",
+        "secenekler": { "A": "encouraged", "B": "elicited", "C": "encountered", "D": "escaped" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 3,
+        "soru_metni": "(Reading Comprehension) What is \"The Social Shift\" for a school leader?",
+        "secenekler": { "A": "Firing employees", "B": "Dropping the \"Director mask\" and connecting as a human", "C": "Moving to a new school", "D": "Changing the curriculum" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 4,
+        "soru_metni": "What is the strict rule during a social coffee break according to the text?",
+        "secenekler": { "A": "No eating", "B": "No \"work talk\"", "C": "Only English allowed", "D": "Five minutes only" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 5,
+        "soru_metni": "Why does Ali think having a daily routine is important?",
+        "secenekler": { "A": "It makes life boring", "B": "It helps him manage time and responsibilities better", "C": "It limits his free time", "D": "It creates more stress" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 6,
+        "soru_metni": "How does Ali usually travel to the university?",
+        "secenekler": { "A": "By walking", "B": "By taxi", "C": "By public transport", "D": "By train only" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 7,
+        "soru_metni": "What does Ali do when his football team scores a goal?",
+        "secenekler": { "A": "Goes home", "B": "Jumps up, shouts, and hugs his friends", "C": "Sits quietly", "D": "Gets angry" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 8,
+        "soru_metni": "Please _____ to my email as soon as possible.",
+        "secenekler": { "A": "replace", "B": "reply", "C": "report", "D": "require" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 9,
+        "soru_metni": "I need to _____ my old computer with a new one.",
+        "secenekler": { "A": "replace", "B": "rely", "C": "rest", "D": "read" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 10,
+        "soru_metni": "Why does Ali avoid forcing advice on people?",
+        "secenekler": { "A": "It can cause resistance", "B": "It saves time", "C": "He doesn't care", "D": "It is illegal" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 11,
+        "soru_metni": "These tires are very _____, they last a long time without breaking.",
+        "secenekler": { "A": "durable", "B": "damp", "C": "dirty", "D": "dark" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 12,
+        "soru_metni": "The company has the _____ to handle large and difficult projects.",
+        "secenekler": { "A": "canvas", "B": "capability", "C": "center", "D": "ceremony" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 13,
+        "soru_metni": "Why does Ali follow the news regularly?",
+        "secenekler": { "A": "To pass his exams", "B": "To understand what is happening in the world", "C": "To talk less", "D": "To avoid people" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 14,
+        "soru_metni": "What does Ali do to check if a news story is reliable?",
+        "secenekler": { "A": "Shares it immediately", "B": "Checks different sources", "C": "Believes headlines", "D": "Ignores it completely" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 15,
+        "soru_metni": "The river water was _____ with dangerous chemicals from the factory.",
+        "secenekler": { "A": "tainted", "B": "tailored", "C": "tagged", "D": "taken" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 16,
+        "soru_metni": "How does Ali feel when the public bus is very crowded?",
+        "secenekler": { "A": "Comfortable", "B": "Excited", "C": "Uncomfortable", "D": "Relaxed" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 17,
+        "soru_metni": "What does Ali usually talk about in everyday conversations to improve fluency?",
+        "secenekler": { "A": "Politics only", "B": "Plans, routines, or simple problems", "C": "Complex science", "D": "Only history" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 18,
+        "soru_metni": "He gives great speeches; he is a fantastic public _____.",
+        "secenekler": { "A": "speaker", "B": "speed", "C": "spoon", "D": "sport" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 19,
+        "soru_metni": "Which word means \"The action of building something\"?",
+        "secenekler": { "A": "Construction", "B": "Connection", "C": "Condition", "D": "Collection" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 20,
+        "soru_metni": "What helps Ali keep an everyday conversation going?",
+        "secenekler": { "A": "Interrupting often", "B": "Asking follow-up questions", "C": "Staying quiet", "D": "Leaving the room" },
+        "dogru_cevap": "B"
+      }
+    ]
+  },
+  {
+    "sinav_adi": "B2 den C1 e geçiş sınavı",
+    "sorular": [
+      {
+        "soru_no": 1,
+        "soru_metni": "Most of our business is _____ online nowadays.",
+        "secenekler": { "A": "transacted", "B": "translated", "C": "transported", "D": "traveled" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 2,
+        "soru_metni": "University _____ fees are very high this year.",
+        "secenekler": { "A": "tuition", "B": "tactic", "C": "tag", "D": "tale" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 3,
+        "soru_metni": "(Reading Comprehension) What is \"bilingualism\" according to the text?",
+        "secenekler": { "A": "Ordering coffee in Paris", "B": "The ability to use two languages fluently", "C": "Translating documents", "D": "Reading fast" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 4,
+        "soru_metni": "What is the main purpose of the \"Sandwich Method\"?",
+        "secenekler": { "A": "To make sandwiches faster", "B": "To deliver difficult news with positive feedback", "C": "To eat during meetings", "D": "To fire an employee" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 5,
+        "soru_metni": "Why does Mrs. Higgins need to move from Room 301?",
+        "secenekler": { "A": "Her room is dirty", "B": "The room will become a science lab due to curriculum requirements", "C": "She doesn't like the room", "D": "The students asked for a change" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 6,
+        "soru_metni": "What did Herbert Simon predict regarding information and attention?",
+        "secenekler": { "A": "A wealth of information creates a poverty of attention", "B": "Information makes us physically stronger", "C": "Attention is useless in the digital age", "D": "We need more information to survive" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 7,
+        "soru_metni": "What is the \"Attention Economy\"?",
+        "secenekler": { "A": "A new digital currency", "B": "A system where companies compete to capture and monetize human focus", "C": "Paying attention in school", "D": "A bank for data" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 8,
+        "soru_metni": "The seat next to him was completely _____.",
+        "secenekler": { "A": "vacant", "B": "valid", "C": "valuable", "D": "vapor" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 9,
+        "soru_metni": "Please _____ this report for the meeting so everyone has a copy.",
+        "secenekler": { "A": "duplicate", "B": "dump", "C": "dust", "D": "dwell" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 10,
+        "soru_metni": "What does the \"infinite scroll\" feature on social media do?",
+        "secenekler": { "A": "Saves internet data", "B": "Eliminates stopping cues and keeps users hooked", "C": "Protects the eyes", "D": "Closes the application automatically" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 11,
+        "soru_metni": "The city was _____ with missiles for days during the war.",
+        "secenekler": { "A": "bombarded", "B": "borrowed", "C": "bounced", "D": "broken" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 12,
+        "soru_metni": "The survey was intended to _____ a response from the customers.",
+        "secenekler": { "A": "elicit", "B": "eliminate", "C": "elevate", "D": "elope" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 13,
+        "soru_metni": "What does the term \"dark patterns\" refer to in the digital world?",
+        "secenekler": { "A": "Black colors on screens", "B": "Deceptive design tricks aimed at manipulating behavior", "C": "Broken monitors", "D": "Anonymous hackers" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 14,
+        "soru_metni": "From a historical _____, the decision was inevitable.",
+        "secenekler": { "A": "viewpoint", "B": "violence", "C": "violin", "D": "virtue" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 15,
+        "soru_metni": "He stepped up to the _____ to give his speech to the crowd.",
+        "secenekler": { "A": "rostrum", "B": "roster", "C": "rose", "D": "rope" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 16,
+        "soru_metni": "What is \"cognitive liberty\"?",
+        "secenekler": { "A": "The right to mental self-determination free from algorithmic manipulation", "B": "Free internet access", "C": "Learning multiple languages", "D": "Memorizing data" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 17,
+        "soru_metni": "She gave a _____ defense of her revolutionary ideas.",
+        "secenekler": { "A": "vigorous", "B": "village", "C": "vinegar", "D": "visible" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 18,
+        "soru_metni": "What does \"curriculum\" refer to in an educational context?",
+        "secenekler": { "A": "The subjects comprising a course of study in a school", "B": "A type of school building", "C": "A resume for a job", "D": "The cafeteria menu" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 19,
+        "soru_metni": "How often do we negotiate according to the texts?",
+        "secenekler": { "A": "Once a year", "B": "Only at work", "C": "Every single day", "D": "Never" },
+        "dogru_cevap": "C"
+      },
+      {
+        "soru_no": 20,
+        "soru_metni": "What does \"validation\" mean in the Sandwich Method?",
+        "secenekler": { "A": "Parking a car legally", "B": "Making someone feel their feelings or actions are worthwhile", "C": "Ignoring someone's complaints", "D": "Paying a bill" },
+        "dogru_cevap": "B"
+      }
+    ]
+  },
+  {
+    "sinav_adi": "C1 den C2 ye geçiş sınavı",
+    "sorular": [
+      {
+        "soru_no": 1,
+        "soru_metni": "The dictator ordered the _____ of free speech in the media.",
+        "secenekler": { "A": "suppression", "B": "support", "C": "supply", "D": "suppose" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 2,
+        "soru_metni": "The empire maintained its air _____ during the entire conflict.",
+        "secenekler": { "A": "supremacy", "B": "surprise", "C": "surgery", "D": "surface" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 3,
+        "soru_metni": "He's surrounded by _____, people who praise him just to get an advantage.",
+        "secenekler": { "A": "sycophants", "B": "symbols", "C": "systems", "D": "syllables" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 4,
+        "soru_metni": "(Reading Comprehension) What is the most urgent battle in the digital age according to the text?",
+        "secenekler": { "A": "Creating new apps", "B": "Reclaiming our attention and individual autonomy", "C": "Buying new phones", "D": "Scrolling faster" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 5,
+        "soru_metni": "The journalist submitted a _____ report of the interview.",
+        "secenekler": { "A": "verbatim", "B": "verbal", "C": "verb", "D": "version" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 6,
+        "soru_metni": "The document was full of unnecessary _____, making it hard to read.",
+        "secenekler": { "A": "verbiage", "B": "verdict", "C": "verify", "D": "vessel" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 7,
+        "soru_metni": "What is the \"socio-economic domino effect\" mentioned during global crises?",
+        "secenekler": { "A": "Building more houses", "B": "Disrupting supply chains and causing economic recession", "C": "Increasing tourism", "D": "Playing board games" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 8,
+        "soru_metni": "What does a \"parallel pandemic\" refer to in the text?",
+        "secenekler": { "A": "A new virus mutation", "B": "A pandemic of mental health issues and misinformation", "C": "Lack of physical hospitals", "D": "Healthy lifestyle trends" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 9,
+        "soru_metni": "After the heavy meal, a feeling of _____ came over him.",
+        "secenekler": { "A": "lethargy", "B": "letter", "C": "level", "D": "lever" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 10,
+        "soru_metni": "It is a _____ struggle; it never seems to end.",
+        "secenekler": { "A": "perpetual", "B": "perfect", "C": "perform", "D": "perhaps" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 11,
+        "soru_metni": "The man fell to his knees with a _____ look on his face.",
+        "secenekler": { "A": "suppliant", "B": "supply", "C": "supreme", "D": "sure" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 12,
+        "soru_metni": "The university received a _____ donation from an anonymous billionaire.",
+        "secenekler": { "A": "munificent", "B": "murky", "C": "murmur", "D": "muscle" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 13,
+        "soru_metni": "What does the concept of \"digital well-being\" demand from platforms?",
+        "secenekler": { "A": "Free premium accounts", "B": "Tools to monitor and limit screen time", "C": "More advertisements", "D": "Infinite scrolling" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 14,
+        "soru_metni": "What does \"defensive\" mean in a psychological or communication context?",
+        "secenekler": { "A": "Playing sports well", "B": "Very anxious to challenge or avoid criticism", "C": "Being entirely open", "D": "Happy and relaxed" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 15,
+        "soru_metni": "A _____ child was presented to claim the royal inheritance illegally.",
+        "secenekler": { "A": "supposititious", "B": "supreme", "C": "sure", "D": "surprise" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 16,
+        "soru_metni": "Why do social media platforms use \"infinite scroll\"?",
+        "secenekler": { "A": "To save data usage", "B": "To eliminate stopping cues and keep users engaged infinitely", "C": "To protect the users' eyes", "D": "To make the app run faster" },
+        "dogru_cevap": "B"
+      },
+      {
+        "soru_no": 17,
+        "soru_metni": "The weather in the jungle was absolutely _____; we couldn't breathe.",
+        "secenekler": { "A": "sweltering", "B": "sweet", "C": "swelling", "D": "swimming" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 18,
+        "soru_metni": "The professor asked the students to _____ the complex poem.",
+        "secenekler": { "A": "explicate", "B": "explode", "C": "explore", "D": "export" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 19,
+        "soru_metni": "What is \"symbiosis\"?",
+        "secenekler": { "A": "A relationship between two organisms that live together and help each other", "B": "A type of disease", "C": "A musical instrument", "D": "A formal meeting" },
+        "dogru_cevap": "A"
+      },
+      {
+        "soru_no": 20,
+        "soru_metni": "He wrote a clever _____ that made everyone laugh and think deeply.",
+        "secenekler": { "A": "epigram", "B": "episode", "C": "epoch", "D": "equal" },
+        "dogru_cevap": "A"
+      }
+    ]
+  }
+]
