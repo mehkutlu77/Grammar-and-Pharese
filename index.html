@@ -180,14 +180,13 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
 .game-chip{ background:var(--lvl-soft); border:1.5px solid var(--lvl-main); color:var(--lvl-dark); font-size:.73rem; font-weight:700; padding:5px 14px; border-radius:50px; letter-spacing:.3px; }
 
 /* ── 3D CARD ── */
-.card-zone{ flex:1; display:flex; align-items:center; justify-content:center; padding:12px 20px; perspective:1200px; -webkit-perspective:1200px; min-height:0; }
+.card-zone{ flex:1; display:flex; align-items:center; justify-content:center; padding:12px 20px; perspective:1200px; min-height:0; }
 .card-3d{ width:100%; height:100%; max-height:420px; position:relative; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,0,.2,1); cursor:pointer; }
 .card-3d.flipped{ transform:rotateY(180deg); }
 .card-face{ position:absolute; width:100%; height:100%; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:24px; background:var(--surface); box-shadow:var(--shadow-md); border:2px solid var(--lvl-main); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px 24px; overflow:hidden; }
-.card-zone{ -webkit-perspective:1200px; perspective:1200px; }
 .card-face::before{ content:''; position:absolute; top:-25px; right:-25px; width:100px; height:100px; background:var(--lvl-soft); border-radius:50%; }
 .card-face::after{ content:''; position:absolute; bottom:-30px; left:-20px; width:80px; height:80px; background:var(--lvl-soft); border-radius:50%; }
-.card-back{ transform:rotateY(180deg); -webkit-transform:rotateY(180deg); border-color:var(--lvl-dark); background:var(--lvl-soft); }
+.card-back{ transform:rotateY(180deg); border-color:var(--lvl-dark); background:var(--lvl-soft); }
 .card-back::before,.card-back::after{ opacity:.4; }
 .card-tap-hint{ font-size:.65rem; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; z-index:1; }
 .card-q{ font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:var(--text); line-height:1.35; z-index:1; }
@@ -2213,8 +2212,18 @@ function clearAuthSession(){ localStorage.removeItem(AUTH_SESSION_KEY); }
 /* Seed super admin once */
 async function seedSuperAdmin(){
   const users = getAuthUsers();
-  if(users.find(u=>u.isSuperAdmin)) return;
   const pw = await hashPw('admin241');
+  const existing = users.find(u=>u.isSuperAdmin);
+  if(existing){
+    // Her zaman şifreyi ve yetkileri güncelle — böylece şifre değişikliği sonrası da çalışır
+    existing.pw = pw;
+    existing.isAdmin = true;
+    existing.isSuperAdmin = true;
+    existing.username = 'admin241';
+    existing.email = 'mehkutlu@gmail.com';
+    saveAuthUsers(users);
+    return;
+  }
   users.push({
     id:'sadmin-mehkutlu', name:'Mehmet Kutlu',
     email:'mehkutlu@gmail.com', username:'admin241',
@@ -2480,12 +2489,29 @@ function adminImport(e, type){
   reader.onload = ev => {
     try{
       const raw = JSON.parse(ev.target.result);
-      if(type==='grammar'){ DB.grammar = raw.db ? raw : {db:raw}; }
-      else if(type==='phrase'){ DB.phrase = raw.db ? raw : {db:raw}; }
-      else if(type==='exams'){ DB.exams = Array.isArray(raw) ? raw : raw.exams; }
+      if(type==='grammar'){
+        DB.grammar = raw.db ? raw : {db:raw};
+        localStorage.setItem('lv_pg_grammar', JSON.stringify(DB.grammar));
+      } else if(type==='phrase'){
+        DB.phrase = raw.db ? raw : {db:raw};
+        localStorage.setItem('lv_pg_phrase', JSON.stringify(DB.phrase));
+      } else if(type==='exams'){
+        DB.exams = Array.isArray(raw) ? raw : raw.exams;
+        localStorage.setItem('lv_pg_exams', JSON.stringify(DB.exams));
+      }
+      // İlerleme senkronizasyonu
+      const sync=(mode)=>{
+        const db=DB[mode]; if(!db?.db) return;
+        Object.entries(db.db).forEach(([lvl,sets])=>{
+          if(!user.progress[mode][lvl]) user.progress[mode][lvl]={done:0,total:sets.length};
+          else user.progress[mode][lvl].total=sets.length;
+        });
+      };
+      sync('grammar'); sync('phrase');
+      saveUser();
       const session = getAuthSession();
       renderAdminPanel(session);
-      notify('Veri başarıyla güncellendi!','success');
+      notify('Veri başarıyla güncellendi ve kaydedildi! ✅','success');
     } catch(err){ notify('Dosya okunamadı: '+err.message,'error'); }
   };
   reader.readAsText(e.target.files[0]);
@@ -2719,14 +2745,39 @@ function closeCertificate(){
 ================================================================ */
 async function loadData(){
   const tryFetch=async url=>{ const r=await fetch(url); if(!r.ok) throw new Error(r.status); return r.json(); };
+
+  // Önce localStorage'dan yükle (admin panel ile yüklenen veriler)
+  const savedG = localStorage.getItem('lv_pg_grammar');
+  const savedP = localStorage.getItem('lv_pg_phrase');
+  const savedE = localStorage.getItem('lv_pg_exams');
+
+  // Sonra sunucudan fetch et (varsa localStorage'ı güncelle)
   const results = await Promise.allSettled([
     tryFetch('./grammer.json'),
     tryFetch('./pharese.json'),
     tryFetch('./sinavlar.json'),
   ]);
-  DB.grammar = results[0].status==='fulfilled' ? results[0].value : null;
-  DB.phrase  = results[1].status==='fulfilled' ? results[1].value : null;
-  DB.exams   = results[2].status==='fulfilled' ? results[2].value : null;
+
+  if(results[0].status==='fulfilled'){
+    DB.grammar = results[0].value;
+    localStorage.setItem('lv_pg_grammar', JSON.stringify(DB.grammar));
+  } else {
+    DB.grammar = savedG ? JSON.parse(savedG) : null;
+  }
+
+  if(results[1].status==='fulfilled'){
+    DB.phrase = results[1].value;
+    localStorage.setItem('lv_pg_phrase', JSON.stringify(DB.phrase));
+  } else {
+    DB.phrase = savedP ? JSON.parse(savedP) : null;
+  }
+
+  if(results[2].status==='fulfilled'){
+    DB.exams = results[2].value;
+    localStorage.setItem('lv_pg_exams', JSON.stringify(DB.exams));
+  } else {
+    DB.exams = savedE ? JSON.parse(savedE) : null;
+  }
 
   // Sync progress totals
   const sync=(mode)=>{
@@ -2874,24 +2925,16 @@ async function init(){
   if(user.darkMode) document.body.classList.add('dark-mode');
   setTheme('A1');
 
+  // seedSuperAdmin her zaman önce çalışsın — JSON dosyaları olmasa bile admin girişi çalışsın
+  await seedSuperAdmin();
+
   try {
-    await Promise.all([loadData(), seedSuperAdmin()]);
+    await loadData();
   } catch(err){
-    console.error('[Init] Data load failed:', err);
-    // Show error state with retry button
-    const lo = document.getElementById('loadingOverlay');
-    lo.innerHTML = `
-      <div style="text-align:center;padding:32px;color:#fff">
-        <div style="font-size:3rem;margin-bottom:16px">⚠️</div>
-        <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px">Veriler yüklenemedi</div>
-        <div style="font-size:.85rem;opacity:.8;margin-bottom:24px">İnternet bağlantınızı kontrol edip tekrar deneyin.</div>
-        <button onclick="location.reload()" style="background:#fff;color:#16a34a;border:none;padding:12px 28px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer">Tekrar Dene</button>
-      </div>`;
-    lo.style.display='flex';
-    lo.classList.remove('hidden');
-    return;
+    console.warn('[Init] JSON data load failed (devam ediliyor):', err);
   }
 
+  // JSON yüklenemese de uygulamayı başlat
   document.getElementById('loadingOverlay').classList.add('hidden');
   setTimeout(()=>document.getElementById('loadingOverlay').style.display='none',500);
 
