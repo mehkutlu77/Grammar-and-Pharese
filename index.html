@@ -182,17 +182,17 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
 /* ── 3D CARD ── */
 .card-zone{ flex:1; display:flex; align-items:center; justify-content:center; padding:12px 20px; min-height:0; }
 .card-3d{ width:100%; height:100%; max-height:420px; position:relative; cursor:pointer; }
-.card-face{ position:absolute; width:100%; height:100%; border-radius:24px; background:var(--surface); box-shadow:var(--shadow-md); border:2px solid var(--lvl-main); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px 24px; overflow:hidden; transition:opacity .18s ease, transform .18s ease; }
+.card-face{ position:absolute; top:0; left:0; width:100%; height:100%; border-radius:24px; background:var(--surface); box-shadow:var(--shadow-md); border:2px solid var(--lvl-main); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px 24px; overflow:hidden; transition:opacity .25s ease; }
 .card-face::before{ content:''; position:absolute; top:-25px; right:-25px; width:100px; height:100px; background:var(--lvl-soft); border-radius:50%; }
 .card-face::after{ content:''; position:absolute; bottom:-30px; left:-20px; width:80px; height:80px; background:var(--lvl-soft); border-radius:50%; }
-/* Front: visible by default */
-.card-front{ opacity:1; pointer-events:auto; z-index:2; }
-/* Back: hidden by default */
-.card-back{ border-color:var(--lvl-dark); background:var(--lvl-soft); opacity:0; pointer-events:none; z-index:1; }
+/* Front face: visible, on top */
+.card-front{ opacity:1; visibility:visible; z-index:2; pointer-events:auto; }
+/* Back face: invisible, underneath */
+.card-back{ border-color:var(--lvl-dark); background:var(--lvl-soft); opacity:0; visibility:hidden; z-index:1; pointer-events:none; }
 .card-back::before,.card-back::after{ opacity:.4; }
-/* Flipped state: hide front, show back */
-.card-3d.flipped .card-front{ opacity:0; pointer-events:none; z-index:1; }
-.card-3d.flipped .card-back{ opacity:1; pointer-events:auto; z-index:2; }
+/* Flipped: hide front, reveal back */
+.card-3d.flipped .card-front{ opacity:0; visibility:hidden; z-index:1; pointer-events:none; }
+.card-3d.flipped .card-back{ opacity:1; visibility:visible; z-index:2; pointer-events:auto; }
 .card-tap-hint{ font-size:.65rem; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; z-index:1; }
 .card-q{ font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:var(--text); line-height:1.35; z-index:1; }
 .card-a{ font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; color:var(--lvl-dark); line-height:1.35; z-index:1; }
@@ -865,7 +865,7 @@ html,body{ width:100%; height:100%; overflow:hidden; font-family:'DM Sans',sans-
       <button class="icon-btn" onclick="speak()"><i class="fa-solid fa-volume-high"></i></button>
     </div>
     <div class="card-zone" style="position:relative">
-      <div class="card-3d" id="card3d" onclick="this.classList.toggle('flipped')">
+      <div class="card-3d" id="card3d">
         <div class="card-face card-front">
           <div class="card-tap-hint">Çevirmek için dokun</div>
           <div class="card-q" id="cardQ">—</div>
@@ -1483,11 +1483,32 @@ function playSound(type){
 /* ================================================================
    SWIPE GESTURE (kart oyunu)
 ================================================================ */
+function flipCard(){
+  document.getElementById('card3d').classList.toggle('flipped');
+}
+
 function initGameSwipe(){
   if(_swipeInited) return;
   _swipeInited = true;
+  const card = document.getElementById('card3d');
   const screen = document.getElementById('scrGame');
   let sx = 0, sy = 0, st = 0;
+
+  /* Tap to flip — touch */
+  card.addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
+  }, {passive: true});
+  card.addEventListener('touchend', e => {
+    const dx = Math.abs(e.changedTouches[0].clientX - sx);
+    const dy = Math.abs(e.changedTouches[0].clientY - sy);
+    const dt = Date.now() - st;
+    if(dt < 300 && dx < 15 && dy < 15) flipCard();
+  }, {passive: true});
+
+  /* Tap to flip — mouse (desktop) */
+  card.addEventListener('click', flipCard);
+
+  /* Swipe left/right on screen to answer */
   screen.addEventListener('touchstart', e => {
     sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
   }, {passive: true});
